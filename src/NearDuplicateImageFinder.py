@@ -13,7 +13,9 @@ from tqdm import tqdm
 
 from utils.ImgUtils import ImgUtils
 
-
+"""
+(C) Umberto Griffo, 2019
+"""
 class NearDuplicateImageFinder(object):
 
     def __init__(self, img_file_list, hash_size=16, parallel=False, batch_size=32, verbose=0):

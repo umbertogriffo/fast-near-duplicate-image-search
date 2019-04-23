@@ -10,7 +10,8 @@ Use at your own risk. Make sure you back up your pictures before using.
 ## pHash definition
 
 Features in the image are used to generate a distinct (but not unique) fingerprint, and these fingerprints are comparable.
-**Perceptual hashes** are a different concept compared to cryptographic hash functions like **MD5** and **SHA1**.
+[Perceptual hashes](http://hackerfactor.com/blog/index.php%3F/archives/432-Looks-Like-It.html) are a different concept compared to cryptographic hash functions like **MD5** and **SHA1**.
+
 With cryptographic hashes, the hash values are random. The data used to generate the hash acts like a random seed, 
 so the same data will generate the same result, but different data will create different results.
 Comparing two **SHA1** hash values really only tells you two things. 
@@ -18,13 +19,13 @@ If the hashes are different, then the data is different.
 And if the hashes are the same, then the data is likely the same. 
 (Since there is a possibility of a hash collision, having the same hash values does not guarantee the same data.) 
 In contrast, perceptual hashes can be compared giving you a sense of similarity between the two data sets.
-Using pHash images can be scaled larger or smaller, have different aspect ratios, and even minor coloring differences 
+Using **pHash** images can be scaled larger or smaller, have different aspect ratios, and even minor coloring differences 
 (contrast, brightness, etc.) and they will still match similar images.
 
 ## KDTree definition
-A **KDTree** (short for k-dimensional tree) is a space-partitioning data structure for organizing 
+A [KDTree](https://en.wikipedia.org/wiki/K-d_tree)(short for k-dimensional tree) is a space-partitioning data structure for organizing 
 points in a k-dimensional space. 
-In particular, KDTree helps organize and partition the data points based on specific conditions.
+In particular, **KDTree** helps organize and partition the data points based on specific conditions.
 KDTree is a useful for several applications, such as searches involving a multidimensional search key (e.g. range searches and nearest neighbor searches).
 
 ### Complexity (Average)
@@ -37,7 +38,7 @@ where **n** is the number of points.
 
 ## Mixing pHash and KDTree in order to detect Near-Duplicate Faster
 
-To find similar images I hash the images using **pHash** from [ImageHash](https://pypi.org/project/ImageHash/) library,
+In order to find similar images I hash the images using **pHash** from [ImageHash](https://pypi.org/project/ImageHash/) library
 then I build a **KDTree** and perform a **nearest neighbours** search on image hashes.
 
 SW Environment
@@ -72,24 +73,26 @@ pip install -U pytest
 pip install ImageHash
 ```
 
-To package an Anaconda environment
-==================================
-#### To export environment file
+#### To package an Anaconda environment
+
+##### To export environment file
 ```
 conda env export -n fast_near_duplicate_img_src_py3 > environment.yml
 ```
-#### For other person to use the environment:
+##### For other people to use the environment:
 ```
 conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
 
 Todo
 ====
-- [X] https://www.kaggle.com/colinmorris/visualizing-embeddings-with-t-sne
-- [] https://github.com/philipbl/duplicate-images
-- [] https://github.com/knjcode/imgdupes
-- [] https://github.com/zegami/image-similarity-clustering
-- [] Use Locality Sensitive Hashing instead of KDTree.
+- [ ] Use t-sne in order to see a cluster of images 
+    - https://www.kaggle.com/colinmorris/visualizing-embeddings-with-t-sne
+    - https://github.com/zegami/image-similarity-clustering
+- [ ] Looking for inspiration from:
+    - https://github.com/philipbl/duplicate-images
+    - https://github.com/knjcode/imgdupes
+- [ ] Use Locality Sensitive Hashing instead of KDTree.
     - https://towardsdatascience.com/locality-sensitive-hashing-for-music-search-f2f1940ace23
     - https://towardsdatascience.com/fast-near-duplicate-image-search-using-locality-sensitive-hashing-d4c16058efcb
 
