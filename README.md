@@ -92,9 +92,15 @@ Todo
 - [ ] Looking for inspiration from:
     - https://github.com/philipbl/duplicate-images
     - https://github.com/knjcode/imgdupes
+    - https://github.com/EdjoLabs/image-match
+- [ ] Use pykdtree instead of KDTree.
+    - https://github.com/storpipfugl/pykdtree
 - [ ] Use Locality Sensitive Hashing instead of KDTree.
     - https://towardsdatascience.com/locality-sensitive-hashing-for-music-search-f2f1940ace23
     - https://towardsdatascience.com/fast-near-duplicate-image-search-using-locality-sensitive-hashing-d4c16058efcb
+- [ ] Use BK-trees instead of KDTree.
+    - http://tech.jetsetter.com/2017/03/21/duplicate-image-detection/
+   
 
 References
 ==========
@@ -104,3 +110,4 @@ References
 * [KDTree - Wikipedia](https://en.wikipedia.org/wiki/K-d_tree)
 * [Introductory guide to Information Retrieval using kNN and KDTree](https://www.analyticsvidhya.com/blog/2017/11/information-retrieval-using-kdtree/)
 * [Perceptual Hash computation](http://www.hackerfactor.com/blog/index.php?/archives/432-Looks-Like-It.htm)
+* [Benchmarking Nearest Neighbor Searches in Python](https://jakevdp.github.io/blog/2013/04/29/benchmarking-nearest-neighbor-searches-in-python/)

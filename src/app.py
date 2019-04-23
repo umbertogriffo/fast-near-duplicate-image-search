@@ -2,12 +2,14 @@
 
 import datetime
 import os
+import random
 
 import pandas as pd
 from natsort import natsorted
 from tqdm import tqdm
 
-from NearDuplicateImageFinder import NearDuplicateImageFinder
+from near_duplicate_image_finger.KDTreeFinder import KDTreeFinder
+from near_duplicate_image_finger.cKDTreeFinder import cKDTreeFinder
 from utils.FileSystemUtils import FileSystemUtils
 
 """
@@ -106,20 +108,23 @@ if __name__ == '__main__':
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
 
     # Config
-    images_path = "/home/umberto/Dataset/potato_classification/V5/Test/prima"
+    images_path = "/home/umberto/Dataset/histopathologic-cancer-detection-dataset/train"
     output_path = "/home/umberto/Output/duplicates/" + dt
     hash_size = 16
-    nearest_neighbors = 30
+    nearest_neighbors = 2
+    leaf_size = 40
     parallel = True
-    threshold = 150
-    delete_keep = False
+    batch_size = 1024
+    threshold = 10
+    delete_keep = True
     image_w = 128
     image_h = 128
 
     FileSystemUtils.mkdir_if_not_exist(output_path)
     # Retrieve the images contained in output_path.
     img_file_list = get_images_list(images_path, natural_order=True)
-    near_duplicate_image_finder = NearDuplicateImageFinder(img_file_list, hash_size=hash_size, parallel=parallel)
+    near_duplicate_image_finder = cKDTreeFinder(img_file_list, hash_size=hash_size, leaf_size=leaf_size,
+                                                           parallel=parallel, batch_size=batch_size)
     # Find duplicates
     to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
                                                                                                threshold)
@@ -127,5 +132,8 @@ if __name__ == '__main__':
     print('We have found {0}/{1} duplicates in folder'.format(len(total_report), len(img_file_list)))
     # Save results
     save_results(img_file_list, to_keep, to_remove, hash_size, threshold, output_path, delete_keep_in=delete_keep)
-    # Show duplicates
-    # near_duplicate_image_finder.show_duplicates(dict_image_to_duplicates, output_path, image_w=image_w, image_h=image_h)
+    # Show a duplicate
+    if len(dict_image_to_duplicates) > 0 :
+        random_img = random.choice(list(dict_image_to_duplicates.keys()))
+        near_duplicate_image_finder.show_a_duplicate(dict_image_to_duplicates, random_img, output_path, image_w=image_w,
+                                                     image_h=image_h)

@@ -16,12 +16,15 @@ from utils.ImgUtils import ImgUtils
 """
 (C) Umberto Griffo, 2019
 """
+
+
 class NearDuplicateImageFinder(object):
 
-    def __init__(self, img_file_list, hash_size=16, parallel=False, batch_size=32, verbose=0):
+    def __init__(self, img_file_list, hash_size=16, leaf_size=40, parallel=False, batch_size=32, verbose=0):
 
         self.img_file_list = img_file_list
         self.hash_size = hash_size
+        self.leaf_size = leaf_size
         self.parallel = parallel
         self.batch_size = batch_size
         self.verbose = verbose
@@ -114,7 +117,7 @@ class NearDuplicateImageFinder(object):
 
         result = {}
 
-        for i, image in enumerate(block):
+        for i, image in tqdm(enumerate(block)):
             hash_code = self.img_hash(image, self.hash_size)
             result['file'] = result.get('file', []) + [image]
             result['hash'] = result.get('hash', []) + [hash_code]
@@ -137,7 +140,7 @@ class NearDuplicateImageFinder(object):
         # initialise the pool outside the loop
         pool = multiprocessing.Pool(processes=self.number_of_cpu)
         # For each image calculate the phash and store it in a DataFrame
-        for i in range(0, len(self.img_file_list), self.batch_size):
+        for i in tqdm(range(0, len(self.img_file_list), self.batch_size)):
             # delegate work inside the loop
             r = pool.apply_async(self.multiprocessing_img_hash, args=(self.img_file_list[i:i + self.batch_size],))
             result_list.append(r)
@@ -179,11 +182,10 @@ class NearDuplicateImageFinder(object):
         self.df_dataset = df_hashes.join(newcols)
 
     def build_tree(self):
+        raise NotImplementedError('subclasses must override build_tree()!')
 
-        print('Building the KDTree...')
-
-        hash_str_len = len(self.df_dataset.at[0, 'hash_list'])
-        self.tree = KDTree(self.df_dataset[[str(i) for i in range(0, hash_str_len)]], metric='manhattan')
+    def find(self, nearest_neighbors=10, threshold=150):
+        raise NotImplementedError('subclasses must override build_tree()!')
 
     def find_duplicates(self, nearest_neighbors=10, threshold=150):
         """
@@ -199,13 +201,11 @@ class NearDuplicateImageFinder(object):
         dict_image_to_duplicates = dict()
         keep = []
         remove = []
-        hash_str_len = len(self.df_dataset.at[0, 'hash_list'])
         # 'distances' is a matrix NxM where N is the number of images and M is the value of nearest_neighbors_in.
         # For each image it contains an array containing the distances of k-nearest neighbors.
         # 'indices' is a matrix NxM where N is the number of images and M is the value of nearest_neighbors_in.
         # For each image it contains an array containing the indices of k-nearest neighbors.
-        distances, indices = self.tree.query(self.df_dataset[[str(i) for i in range(0, hash_str_len)]],
-                                             k=nearest_neighbors)
+        distances, indices = self.find(nearest_neighbors, threshold)
         max_distance = distances.max()
         print("\t Max distance: {}".format(max_distance))
         min_distance = distances.min()
@@ -240,7 +240,7 @@ class NearDuplicateImageFinder(object):
         # D         A,B         C,D,E,F
         # C         A,B         C,D,E,F
         # M         A,B,M       C,D,E,F,N,O
-        for k, (key, value) in enumerate(dict_image_to_duplicates.items()):
+        for k, (key, value) in tqdm(enumerate(dict_image_to_duplicates.items())):
             if k == 0:
                 keep.append(key)
                 remove.extend(value)
@@ -261,24 +261,31 @@ class NearDuplicateImageFinder(object):
 
         return files_to_keep, files_to_remove, dict_image_to_duplicates
 
-    def show_duplicates(self, image_to_duplicates, output_path, image_w, image_h):
+    def show_a_duplicate(self, image_to_duplicates, image, output_path, image_w, image_h):
         """
-        Show duplicates.
+        Show a duplicate.
+        :param image_to_duplicates:
+        :param image:
+        :param output_path:
+        :param image_w:
+        :param image_h:
         :return:
         """
-        print('Showing duplicates...')
-        for image, duplicates in tqdm(image_to_duplicates.items()):
-            files_to_show = []
 
-            image_path = self.df_dataset.iloc[image]['file']
-            files_to_show.append(ImgUtils.scale(ImgUtils.read_image_numpy(image_path, image_w, image_h)))
+        print('Showing a duplicate...')
+        duplicate = image_to_duplicates[image]
+        files_to_show = []
 
-            duplicates_path = [f for f in list(self.df_dataset.iloc[duplicates]['file'])]
-            duplicates_arr = [ImgUtils.scale(ImgUtils.read_image_numpy(f, image_w, image_h)) for f in duplicates_path]
-            files_to_show.extend(duplicates_arr)
-            fig_acc = plt.figure(figsize=(10, len(files_to_show) * 5))
-            plt.imshow(ImgUtils.mosaic_images(np.asarray(files_to_show), len(files_to_show)))
-            fig_acc.savefig(os.path.join(output_path, image_path.split(os.path.sep)[-1]))
-            # plt.show()
-            plt.cla()
-            plt.close()
+        image_path = self.df_dataset.iloc[image]['file']
+        files_to_show.append(ImgUtils.scale(ImgUtils.read_image_numpy(image_path, image_w, image_h)))
+
+        duplicates_path = [f for f in list(self.df_dataset.iloc[duplicate]['file'])]
+        duplicates_arr = [ImgUtils.scale(ImgUtils.read_image_numpy(f, image_w, image_h)) for f in duplicates_path]
+        files_to_show.extend(duplicates_arr)
+        fig_acc = plt.figure(figsize=(10, len(files_to_show) * 5))
+        plt.imshow(ImgUtils.mosaic_images(np.asarray(files_to_show), len(files_to_show)))
+        fig_acc.savefig(os.path.join(output_path, image_path.split(os.path.sep)[-1]))
+        if self.verbose == 1:
+            plt.show()
+        plt.cla()
+        plt.close()
