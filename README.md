@@ -1,11 +1,13 @@
-# Fast Near-Duplicate Image Search using pHash and KDTree.
+# Fast Near-Duplicate Image Search and Delete
 * Author: Umberto Griffo
 * Twitter: @UmbertoGriffo
 
-Disclaimer
-==========
-I take no responsibility for bugs in this script or accidentally deleted pictures. 
-Use at your own risk. Make sure you back up your pictures before using.
+This Python script is a command line tool for checking and deleting near-duplicate images based on perceptual hash from the target directory.
+In order to find similar images this script hashes the images using **pHash** from [ImageHash](https://pypi.org/project/ImageHash/) library,
+adding the hash into a **KDTree** and perform a **nearest neighbours** search.
+
+> I take no responsibility for bugs in this script or accidentally deleted pictures. 
+> Use at your own risk. Make sure you back up your pictures before using.
 
 ## pHash definition
 
@@ -35,11 +37,6 @@ KDTree is a useful for several applications, such as searches involving a multid
 |O(n)|O(log n)|O(log n)|O(log n)|
 
 where **n** is the number of points.
-
-## Mixing pHash and KDTree in order to detect Near-Duplicate Faster
-
-In order to find similar images I hash the images using **pHash** from [ImageHash](https://pypi.org/project/ImageHash/) library
-then I build a **KDTree** and perform a **nearest neighbours** search on image hashes.
 
 SW Environment
 ==============
@@ -84,6 +81,28 @@ conda env export -n fast_near_duplicate_img_src_py3 > environment.yml
 conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
 
+Usage
+=====
+The following example is sample command to find sets of near-duplicate images with Manhattan distance of phash equal to 16
+from the target directory.
+```
+$ app.py delete --images_path target_dir --output_path output_dir --tree_type KDTree
+```
+```
+Building the dataset...
+ 94%|█████████▎| 399/426 [00:01<00:00, 260.90it/s]0 out to 426
+100%|██████████| 426/426 [00:01<00:00, 261.02it/s]
+Building the KDTree...
+Finding duplicates...
+	 Max distance: 279.0
+	 Min distance: 0.0
+305it [00:00, 208654.82it/s]
+	 number of files to remove: 237
+	 number of files to keep: 128
+365 duplicates has been founded in 0.021222591400146484 seconds
+We have found 365/426 duplicates in folder
+We have found 189/426 not duplicates in folder
+```
 Todo
 ====
 - [ ] Use t-sne in order to see a cluster of images 

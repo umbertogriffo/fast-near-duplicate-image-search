@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import argparse
 import datetime
 import os
 import random
@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from near_duplicate_image_finger.KDTreeFinder import KDTreeFinder
 from near_duplicate_image_finger.cKDTreeFinder import cKDTreeFinder
+from utils.CommandLineUtils import CommandLineUtils
 from utils.FileSystemUtils import FileSystemUtils
 
 """
@@ -105,35 +106,112 @@ def save_results(img_file_list_in, to_keep_in, to_remove_in, hash_size_in, thres
 
 
 if __name__ == '__main__':
+
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
 
-    # Config
-    images_path = "/home/umberto/Dataset/histopathologic-cancer-detection-dataset/train"
-    output_path = "/home/umberto/Output/duplicates/" + dt
-    hash_size = 16
-    nearest_neighbors = 2
-    leaf_size = 40
-    parallel = True
-    batch_size = 1024
-    threshold = 10
-    delete_keep = True
-    image_w = 128
-    image_h = 128
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description='Fast Near-Duplicate Image Search and Delete')
+    parser.add_argument("command",
+                        metavar="<command>",
+                        type=str,
+                        choices=['delete'])
+    parser.add_argument('--images_path',
+                        required=True,
+                        metavar="/path/to/images/",
+                        type=str,
+                        help='Directory containing images')
+    parser.add_argument('--output_path',
+                        required=True,
+                        metavar="/path/to/output/",
+                        type=str,
+                        help='Directory containing results.')
+    parser.add_argument('--tree_type',
+                        required=False,
+                        metavar="KDTree or cKDTree",
+                        type=str,
+                        choices=['KDTree', 'cKDTree'],
+                        default='KDTree')
+    parser.add_argument('--parallel',
+                        required=False,
+                        metavar="parallel",
+                        type=CommandLineUtils.str2bool,
+                        nargs='?',
+                        const=True,
+                        default='false',
+                        help="Whether to parallelize the computation.")
+    parser.add_argument("--delete_keep",
+                        type=CommandLineUtils.str2bool,
+                        nargs='?',
+                        const=True,
+                        default='false',
+                        help="Whether to delete the origin of duplication.")
+    parser.add_argument("--hash_size",
+                        type=int,
+                        default=16,
+                        help="hash size")
+    parser.add_argument("--nearest_neighbors",
+                        type=int,
+                        default=10,
+                        help="# of nearest neighbors")
+    parser.add_argument("--leaf_size",
+                        type=int,
+                        default=40,
+                        help="leaf size")
+    parser.add_argument("--batch_size",
+                        type=int,
+                        default=32,
+                        help="batch size")
+    parser.add_argument("--threshold",
+                        type=int,
+                        default=150,
+                        help="threshold")
+    parser.add_argument("--image_w",
+                        type=int,
+                        default=128,
+                        help="image width")
+    parser.add_argument("--image_h",
+                        type=int,
+                        default=128,
+                        help="image height")
+    args = parser.parse_args()
 
-    FileSystemUtils.mkdir_if_not_exist(output_path)
-    # Retrieve the images contained in output_path.
-    img_file_list = get_images_list(images_path, natural_order=True)
-    near_duplicate_image_finder = cKDTreeFinder(img_file_list, hash_size=hash_size, leaf_size=leaf_size,
-                                                           parallel=parallel, batch_size=batch_size)
-    # Find duplicates
-    to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
-                                                                                               threshold)
-    total_report = to_keep + to_remove
-    print('We have found {0}/{1} duplicates in folder'.format(len(total_report), len(img_file_list)))
-    # Save results
-    save_results(img_file_list, to_keep, to_remove, hash_size, threshold, output_path, delete_keep_in=delete_keep)
-    # Show a duplicate
-    if len(dict_image_to_duplicates) > 0 :
-        random_img = random.choice(list(dict_image_to_duplicates.keys()))
-        near_duplicate_image_finder.show_a_duplicate(dict_image_to_duplicates, random_img, output_path, image_w=image_w,
-                                                     image_h=image_h)
+    # Validate arguments
+    if args.command == "delete":
+        assert args.tree_type, "Argument --tree_type is required for deleting"
+
+    if args.command == "delete":
+        # Config
+        images_path = args.images_path
+        output_path = os.path.join(args.output_path,dt)
+        hash_size = args.hash_size
+        nearest_neighbors = args.nearest_neighbors
+        leaf_size = args.leaf_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+        threshold = args.threshold
+        delete_keep = args.delete_keep
+        image_w = args.image_w
+        image_h = args.image_h
+
+        FileSystemUtils.mkdir_if_not_exist(output_path)
+        # Retrieve the images contained in output_path.
+        img_file_list = get_images_list(images_path, natural_order=True)
+        if args.tree_type == 'cKDTree':
+            near_duplicate_image_finder = cKDTreeFinder(img_file_list, hash_size=hash_size, leaf_size=leaf_size,
+                                                                   parallel=parallel, batch_size=batch_size)
+        elif args.tree_type == 'KDTree':
+            near_duplicate_image_finder = KDTreeFinder(img_file_list, hash_size=hash_size, leaf_size=leaf_size,
+                                                        parallel=parallel, batch_size=batch_size)
+        # Find duplicates
+        to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
+                                                                                                   threshold)
+        total_report = to_keep + to_remove
+        print('We have found {0}/{1} duplicates in folder'.format(len(total_report), len(img_file_list)))
+        # Save results
+        save_results(img_file_list, to_keep, to_remove, hash_size, threshold, output_path, delete_keep_in=delete_keep)
+        # Show a duplicate
+        if len(dict_image_to_duplicates) > 0 :
+            random_img = random.choice(list(dict_image_to_duplicates.keys()))
+            near_duplicate_image_finder.show_a_duplicate(dict_image_to_duplicates, random_img, output_path, image_w=image_w,
+                                                         image_h=image_h)
