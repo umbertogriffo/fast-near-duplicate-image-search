@@ -4,13 +4,9 @@ import datetime
 import os
 import random
 
-import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
-from matplotlib.pyplot import imshow
 from natsort import natsorted
 from sklearn.manifold import TSNE
-from PIL import Image
 from tqdm import tqdm
 
 from dataset.ImageToHashDataset import ImageToHashDataset
@@ -256,7 +252,6 @@ if __name__ == '__main__':
                                                          image_h=image_h)
 
     if args.command == "show":
-
         # Config
         images_path = args.images_path
         hash_size = args.hash_size

@@ -2,9 +2,14 @@
 * Author: Umberto Griffo
 * Twitter: @UmbertoGriffo
 
-This Python script is a command line tool for checking and deleting near-duplicate images based on perceptual hash from the target directory.
-In order to find similar images this script hashes the images using **pHash** from [ImageHash](https://pypi.org/project/ImageHash/) library,
+This Python script is a command line tool for visualize, checking and deleting near-duplicate images based on 
+**perceptual hash** from the target directory.
+In order to find similar images this script hashes the images using **pHash** from 
+[ImageHash](https://pypi.org/project/ImageHash/) library,
 adding the hash into a **KDTree** and perform a **nearest neighbours** search.
+In addition, near-duplicate images can be visualized generating a 
+[t-SNE (t-distributed Stochastic Neighbor Embedding)](https://lvdmaaten.github.io/tsne/) 
+using a feature vector for each image derived from the **pHash** function.
 
 ![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/phase.png)
 

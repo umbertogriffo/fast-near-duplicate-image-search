@@ -1,7 +1,6 @@
-import cv2
 import numpy as np
-from numpy import array
 from PIL import Image
+from numpy import array
 
 
 class ImgUtils(object):
