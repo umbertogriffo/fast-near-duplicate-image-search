@@ -6,6 +6,8 @@ This Python script is a command line tool for checking and deleting near-duplica
 In order to find similar images this script hashes the images using **pHash** from [ImageHash](https://pypi.org/project/ImageHash/) library,
 adding the hash into a **KDTree** and perform a **nearest neighbours** search.
 
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/phase.png)
+
 > I take no responsibility for bugs in this script or accidentally deleted pictures. 
 > Use at your own risk. Make sure you back up your pictures before using.
 
@@ -13,6 +15,8 @@ adding the hash into a **KDTree** and perform a **nearest neighbours** search.
 
 Features in the image are used to generate a distinct (but not unique) fingerprint, and these fingerprints are comparable.
 [Perceptual hashes](http://hackerfactor.com/blog/index.php%3F/archives/432-Looks-Like-It.html) are a different concept compared to cryptographic hash functions like **MD5** and **SHA1**.
+
+![phash](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/phash.png)
 
 With cryptographic hashes, the hash values are random. The data used to generate the hash acts like a random seed, 
 so the same data will generate the same result, but different data will create different results.
