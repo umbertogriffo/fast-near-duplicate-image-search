@@ -44,6 +44,12 @@ where **n** is the number of points.
 
 SW Environment
 ==============
+#### TL;DR 
+Install Anaconda and then create the environment:
+```
+conda env create -f fast_near_duplicate_img_src_py3.yml
+```
+
 #### Let’s create an Anaconda environments
 ```
 conda create -n fast_near_duplicate_img_src_py3 python=3.6
@@ -55,39 +61,28 @@ conda create -n fast_near_duplicate_img_src_py3 python=3.6
  To deactivate an active environment, use:
  > source deactivate
 
-#### Install the basic libraries
+##### Install the basic libraries
 ```
 source activate fast_near_duplicate_img_src_py3
 conda install pip pandas scikit-learn scipy numpy matplotlib seaborn pillow natsort==5.5.0 tqdm
 ```
-#### OpenCV 4.0.0.21
+##### ImageHash 4.0 - Image Hashing library
+```
+pip install ImageHash
+```
+##### OpenCV 4.0.0.21 (Not Mandatory)
 ```
 apt install libgtk2.0-dev python3-tk
 pip install opencv-contrib-python==4.0.0.21
 ```
-#### Pytest 4.1.1 in order to develop Unit/Mock test
+##### Pytest 4.1.1 in order to develop Unit/Mock test
 ```
 pip install -U pytest
-```
-#### ImageHash 4.0 - Image Hashing library
-```
-pip install ImageHash
-```
-
-#### To package an Anaconda environment
-
-##### To export environment file
-```
-conda env export -n fast_near_duplicate_img_src_py3 > environment.yml
-```
-##### For other people to use the environment:
-```
-conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
 
 Usage
 =====
-The following example is sample command to find sets of near-duplicate images with Manhattan distance of phash equal to 16
+The following example is sample command to find sets of near-duplicate images with **Manhattan** distance of phash equal to 16
 from the target directory.
 ```
 $ app.py delete --images_path target_dir --output_path output_dir --tree_type KDTree
@@ -109,19 +104,19 @@ We have found 189/426 not duplicates in folder
 ```
 Todo
 ====
-- [ ] Use t-sne in order to see a cluster of images 
+- [ ] Using t-sne in order to see a cluster of images: 
     - https://www.kaggle.com/colinmorris/visualizing-embeddings-with-t-sne
     - https://github.com/zegami/image-similarity-clustering
 - [ ] Looking for inspiration from:
     - https://github.com/philipbl/duplicate-images
     - https://github.com/knjcode/imgdupes
     - https://github.com/EdjoLabs/image-match
-- [ ] Use pykdtree instead of KDTree.
+- [ ] Trying to use pykdtree instead of KDTree.
     - https://github.com/storpipfugl/pykdtree
-- [ ] Use Locality Sensitive Hashing instead of KDTree.
+- [ ] Trying to use  Locality Sensitive Hashing instead of KDTree.
     - https://towardsdatascience.com/locality-sensitive-hashing-for-music-search-f2f1940ace23
     - https://towardsdatascience.com/fast-near-duplicate-image-search-using-locality-sensitive-hashing-d4c16058efcb
-- [ ] Use BK-trees instead of KDTree.
+- [ ] Trying to use  BK-trees instead of KDTree.
     - http://tech.jetsetter.com/2017/03/21/duplicate-image-detection/
    
 
