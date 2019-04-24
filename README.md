@@ -85,7 +85,7 @@ Usage
 #### Delete near-duplicate images from the target directory
 
 ```
-$ app.py delete --images_path target_dir --output_path output_dir --tree_type KDTree
+$ app.py delete --images_path <target_dir> --output_path <output_dir> --tree_type KDTree
 ```
 ```
 Building the dataset...
@@ -104,7 +104,7 @@ We have found 189/426 not duplicates in folder
 ```
 #### Show near-duplicate images from the target directory With t-SNE 
 ```
-$ app.py show --images_path target_dir --output_path output_dir
+$ app.py show --images_path <target_dir> --output_path <output_dir>
 ```
 ![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/resized_cluster.png)
 

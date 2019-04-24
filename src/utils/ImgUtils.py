@@ -41,20 +41,3 @@ class ImgUtils(object):
             y = row * (img_size + 1)
             final[y:y + img_size, x:x + img_size] = kernel
         return final
-
-    @staticmethod
-    def resize_image_preserving_aspect_ratio(np_img, new_width):
-        """
-        Resize an image (channel-last) preserving the aspect ratio.
-
-            new height = (original height / original width) x new width
-
-        :param np_img: numpy array (H, W, C)
-        :param new_width: new width
-        :return:
-        """
-
-        new_height = int((np_img.shape[0] / np_img.shape[1]) * new_width)
-        np_img = cv2.resize(np_img, (new_width, new_height))
-
-        return np_img
