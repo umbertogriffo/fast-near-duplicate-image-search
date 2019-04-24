@@ -14,13 +14,6 @@ from utils.CommandLineUtils import CommandLineUtils
 from utils.FileSystemUtils import FileSystemUtils
 
 """
-Identifies near duplicate images in a directory.
-
-To find similar images I hash the images using pHash from imagehash library,
-then I perform a nearest neighbours search on image hashes.
-pHash ignores the image size and file size and instead creates a hash based on the pixels of the image. 
-This allows you to find duplicate pictures that have been rotated, have changed metadata, and slightly edited.
-
 (C) Umberto Griffo, 2019
 """
 
@@ -164,7 +157,7 @@ if __name__ == '__main__':
                         help="batch size")
     parser.add_argument("--threshold",
                         type=int,
-                        default=150,
+                        default=50,
                         help="threshold")
     parser.add_argument("--image_w",
                         type=int,
