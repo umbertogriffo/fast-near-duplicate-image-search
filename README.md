@@ -82,8 +82,8 @@ pip install -U pytest
 
 Usage
 =====
-The following example is sample command to find sets of near-duplicate images with **Manhattan** distance of phash equal to 16
-from the target directory.
+#### Delete near-duplicate images from the target directory
+
 ```
 $ app.py delete --images_path target_dir --output_path output_dir --tree_type KDTree
 ```
@@ -102,11 +102,18 @@ Finding duplicates...
 We have found 365/426 duplicates in folder
 We have found 189/426 not duplicates in folder
 ```
+#### Show near-duplicate images from the target directory With t-SNE 
+```
+$ app.py show --images_path target_dir --output_path output_dir
+```
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/resized_cluster.png)
+
 Todo
 ====
-- [ ] Using t-sne in order to see a cluster of images: 
+- [X] Using t-SNE in order to visualize a clusters of near-duplicate images: 
     - https://www.kaggle.com/colinmorris/visualizing-embeddings-with-t-sne
     - https://github.com/zegami/image-similarity-clustering
+    - https://github.com/ml4a/ml4a-guides/blob/master/notebooks/image-tsne.ipynb
 - [ ] Looking for inspiration from:
     - https://github.com/philipbl/duplicate-images
     - https://github.com/knjcode/imgdupes
@@ -128,4 +135,6 @@ References
 * [KDTree - Wikipedia](https://en.wikipedia.org/wiki/K-d_tree)
 * [Introductory guide to Information Retrieval using kNN and KDTree](https://www.analyticsvidhya.com/blog/2017/11/information-retrieval-using-kdtree/)
 * [Perceptual Hash computation](http://www.hackerfactor.com/blog/index.php?/archives/432-Looks-Like-It.htm)
+* [Visualizing Embeddings With t-SNE](https://www.kaggle.com/colinmorris/visualizing-embeddings-with-t-sne)
+* [t-SNE visualization of CNN codes](https://cs.stanford.edu/people/karpathy/cnnembed/)
 * [Benchmarking Nearest Neighbor Searches in Python](https://jakevdp.github.io/blog/2013/04/29/benchmarking-nearest-neighbor-searches-in-python/)

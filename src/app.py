@@ -4,14 +4,21 @@ import datetime
 import os
 import random
 
+import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from matplotlib.pyplot import imshow
 from natsort import natsorted
+from sklearn.manifold import TSNE
+from PIL import Image
 from tqdm import tqdm
 
+from dataset.ImageToHashDataset import ImageToHashDataset
 from near_duplicate_image_finder.KDTreeFinder import KDTreeFinder
 from near_duplicate_image_finder.cKDTreeFinder import cKDTreeFinder
 from utils.CommandLineUtils import CommandLineUtils
 from utils.FileSystemUtils import FileSystemUtils
+from utils.PlotUtils import PlotUtils
 
 """
 (C) Umberto Griffo, 2019
@@ -98,6 +105,48 @@ def save_results(img_file_list_in, to_keep_in, to_remove_in, hash_size_in, thres
         copy_images(survived_df, output_path_in, 'survived')
 
 
+def get_tree(img_file_list_in, hash_size_in, leaf_size_in, parallel_in, batch_size_in):
+    df_dataset = ImageToHashDataset(img_file_list_in, hash_size=hash_size_in).build_dataset(parallel=parallel_in,
+                                                                                            batch_size=batch_size_in)
+
+    if args.tree_type == 'cKDTree':
+        near_duplicate_image_finder = cKDTreeFinder(df_dataset, leaf_size=leaf_size_in,
+                                                    parallel=parallel_in, batch_size=batch_size_in)
+    elif args.tree_type == 'KDTree':
+        near_duplicate_image_finder = KDTreeFinder(df_dataset, leaf_size=leaf_size_in,
+                                                   parallel=parallel_in, batch_size=batch_size_in)
+
+    return near_duplicate_image_finder
+
+
+def show(df_dataset_in, output_path_in):
+    """
+    Generating a t-SNE (t-distributed Stochastic Neighbor Embedding) of a set of images, using a feature vector for
+    each image derived from the pHash function.
+    :param df_dataset_in:
+    :param output_path_in:
+    """
+    hash_str_len = len(df_dataset_in.at[0, 'hash_list'])
+
+    # The default of 1,000 iterations gives fine results, but I'm training for longer just to eke
+    # out some marginal improvements. NB: This takes almost an hour!
+    tsne = TSNE(random_state=1, n_iter=15000, metric="cosine")
+
+    embs = tsne.fit_transform(df_dataset_in[[str(i) for i in range(0, hash_str_len)]])
+
+    # Add to dataframe for convenience
+    df_dataset_in['x'] = embs[:, 0]
+    df_dataset_in['y'] = embs[:, 1]
+
+    # Save a copy of our t-SNE mapping data for later use
+    df_dataset_in.to_csv(os.path.join(output_path_in, 'images_tsne.csv'))
+
+    PlotUtils.plot_images_cluster(df_dataset_in, embs, output_path, width=4000, height=3000, max_dim=100)
+    # TODO: image neigbours
+    # PlotUtils.plot_region_around(df_dataset_in, '2018-12-11-15-031193.png')
+    # plt.show()
+
+
 if __name__ == '__main__':
 
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
@@ -108,7 +157,7 @@ if __name__ == '__main__':
     parser.add_argument("command",
                         metavar="<command>",
                         type=str,
-                        choices=['delete'])
+                        choices=['delete', 'show'])
     parser.add_argument('--images_path',
                         required=True,
                         metavar="/path/to/images/",
@@ -173,10 +222,12 @@ if __name__ == '__main__':
     if args.command == "delete":
         assert args.tree_type, "Argument --tree_type is required for deleting"
 
+    output_path = os.path.join(args.output_path, dt)
+    FileSystemUtils.mkdir_if_not_exist(output_path)
+
     if args.command == "delete":
         # Config
         images_path = args.images_path
-        output_path = os.path.join(args.output_path,dt)
         hash_size = args.hash_size
         nearest_neighbors = args.nearest_neighbors
         leaf_size = args.leaf_size
@@ -187,15 +238,9 @@ if __name__ == '__main__':
         image_w = args.image_w
         image_h = args.image_h
 
-        FileSystemUtils.mkdir_if_not_exist(output_path)
         # Retrieve the images contained in output_path.
         img_file_list = get_images_list(images_path, natural_order=True)
-        if args.tree_type == 'cKDTree':
-            near_duplicate_image_finder = cKDTreeFinder(img_file_list, hash_size=hash_size, leaf_size=leaf_size,
-                                                                   parallel=parallel, batch_size=batch_size)
-        elif args.tree_type == 'KDTree':
-            near_duplicate_image_finder = KDTreeFinder(img_file_list, hash_size=hash_size, leaf_size=leaf_size,
-                                                        parallel=parallel, batch_size=batch_size)
+        near_duplicate_image_finder = get_tree(img_file_list, hash_size, leaf_size, parallel, batch_size)
         # Find duplicates
         to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
                                                                                                    threshold)
@@ -204,7 +249,22 @@ if __name__ == '__main__':
         # Save results
         save_results(img_file_list, to_keep, to_remove, hash_size, threshold, output_path, delete_keep_in=delete_keep)
         # Show a duplicate
-        if len(dict_image_to_duplicates) > 0 :
+        if len(dict_image_to_duplicates) > 0:
             random_img = random.choice(list(dict_image_to_duplicates.keys()))
-            near_duplicate_image_finder.show_a_duplicate(dict_image_to_duplicates, random_img, output_path, image_w=image_w,
+            near_duplicate_image_finder.show_a_duplicate(dict_image_to_duplicates, random_img, output_path,
+                                                         image_w=image_w,
                                                          image_h=image_h)
+
+    if args.command == "show":
+
+        # Config
+        images_path = args.images_path
+        hash_size = args.hash_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+
+        # Retrieve the images contained in output_path.
+        img_file_list = get_images_list(images_path, natural_order=True)
+        df_dataset = ImageToHashDataset(img_file_list, hash_size=hash_size).build_dataset(parallel=parallel,
+                                                                                          batch_size=batch_size)
+        show(df_dataset, output_path)
