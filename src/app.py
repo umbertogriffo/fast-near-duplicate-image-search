@@ -8,8 +8,8 @@ import pandas as pd
 from natsort import natsorted
 from tqdm import tqdm
 
-from near_duplicate_image_finger.KDTreeFinder import KDTreeFinder
-from near_duplicate_image_finger.cKDTreeFinder import cKDTreeFinder
+from near_duplicate_image_finder.KDTreeFinder import KDTreeFinder
+from near_duplicate_image_finder.cKDTreeFinder import cKDTreeFinder
 from utils.CommandLineUtils import CommandLineUtils
 from utils.FileSystemUtils import FileSystemUtils
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
                         required=True,
                         metavar="/path/to/images/",
                         type=str,
-                        help='Directory containing images')
+                        help='Directory containing images.')
     parser.add_argument('--output_path',
                         required=True,
                         metavar="/path/to/output/",
