@@ -47,14 +47,24 @@ KDTree is a useful for several applications, such as searches involving a multid
 
 where **n** is the number of points.
 
-SW Environment
+Installation
 ==============
-#### TL;DR 
+### Requirements:
+- ImageHash 4.0 
+- matplotlib
+- scikit-learn
+- scipy
+- numpy
+- pandas
+- pillow
+- natsort
+
+### Option 1: TL;DR 
 Install Anaconda and then create the environment using `fast_near_duplicate_img_src_py3.yml`:
 ```
 conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
-#### Step-by-step installation
+### Option 2: Step-by-step installation
 First, make sure that your conda is setup properly with the right environment
 for that, check that `which conda`, `which pip` and `which python` points to the
 right path. From a clean conda env, this is what you need to do.
