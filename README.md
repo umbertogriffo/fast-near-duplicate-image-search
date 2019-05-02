@@ -50,7 +50,7 @@ where **n** is the number of points.
 SW Environment
 ==============
 #### TL;DR 
-Install Anaconda and then create the environment:
+Install Anaconda and then create the environment using `fast_near_duplicate_img_src_py3.yml`:
 ```
 conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
@@ -69,25 +69,21 @@ conda create -n fast_near_duplicate_img_src_py3 python=3.6
  To deactivate an active environment, use:
  > source deactivate
 
-###### Install the basic libraries
+##### Install dependencies
 ```
 source activate fast_near_duplicate_img_src_py3
 conda install pip pandas scikit-learn scipy numpy matplotlib seaborn pillow natsort==5.5.0 tqdm
-```
-###### ImageHash 4.0 - Image Hashing library
-```
+
+# ImageHash 4.0 - Image Hashing library
 pip install ImageHash
-```
-###### OpenCV 4.0.0.21 (Not Mandatory)
-```
+
+# OpenCV 4.0.0.21 (Not Mandatory)
 apt install libgtk2.0-dev python3-tk
 pip install opencv-contrib-python==4.0.0.21
-```
-###### Pytest 4.1.1 in order to develop Unit/Mock test
-```
+
+# Pytest 4.1.1 in order to develop Unit/Mock test
 pip install -U pytest
 ```
-
 Usage
 =====
 #### Delete near-duplicate images from the target directory
