@@ -123,13 +123,21 @@ Todo
     - https://github.com/philipbl/duplicate-images
     - https://github.com/knjcode/imgdupes
     - https://github.com/EdjoLabs/image-match
+    - http://www.tudatech.com/visualsearchapi/?apiDoc=V
+- [ ] Trying to use Parallel t-SNE implementation with Python and Torch wrappers.
+    - https://github.com/DmitryUlyanov/Multicore-TSNE
+- [ ] Trying to use Fast Fourier Transform-accelerated Interpolation-based t-SNE (FIt-SNE)
+    - https://github.com/KlugerLab/FIt-SNE
+- [ ] Trying to use Extensible, parallel implementations of t-SNE 
+    - https://github.com/pavlin-policar/openTSNE
 - [ ] Trying to use pykdtree instead of KDTree.
     - https://github.com/storpipfugl/pykdtree
-- [ ] Trying to use  Locality Sensitive Hashing instead of KDTree.
+- [ ] Trying to use Locality Sensitive Hashing instead of KDTree.
     - https://towardsdatascience.com/locality-sensitive-hashing-for-music-search-f2f1940ace23
     - https://towardsdatascience.com/fast-near-duplicate-image-search-using-locality-sensitive-hashing-d4c16058efcb
-- [ ] Trying to use  BK-trees instead of KDTree.
+- [ ] Trying to use BK-trees instead of KDTree.
     - http://tech.jetsetter.com/2017/03/21/duplicate-image-detection/
+- [ ] You could also use k-means to cluster the images and only search within clusters that are similar to the query. 
    
 
 References
@@ -140,6 +148,7 @@ References
 * [KDTree - Wikipedia](https://en.wikipedia.org/wiki/K-d_tree)
 * [Introductory guide to Information Retrieval using kNN and KDTree](https://www.analyticsvidhya.com/blog/2017/11/information-retrieval-using-kdtree/)
 * [Perceptual Hash computation](http://www.hackerfactor.com/blog/index.php?/archives/432-Looks-Like-It.htm)
+* [The complete guide to building an image search engine with Python and OpenCV](https://www.pyimagesearch.com/2014/12/01/complete-guide-building-image-search-engine-python-opencv/)
 * [Visualizing Embeddings With t-SNE](https://www.kaggle.com/colinmorris/visualizing-embeddings-with-t-sne)
 * [t-SNE visualization of CNN codes](https://cs.stanford.edu/people/karpathy/cnnembed/)
 * [Benchmarking Nearest Neighbor Searches in Python](https://jakevdp.github.io/blog/2013/04/29/benchmarking-nearest-neighbor-searches-in-python/)
