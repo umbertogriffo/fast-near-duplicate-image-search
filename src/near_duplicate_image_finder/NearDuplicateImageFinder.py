@@ -120,12 +120,12 @@ class NearDuplicateImageFinder(object):
         print("\t number of files to keep: {}".format(len(files_to_keep)))
 
         end_time = time.time()
-        print("{0} duplicates has been founded in {1} seconds".format(len(files_to_remove) + len(files_to_keep),
+        print("{0} duplicates has been founded in {1} seconds".format(len(files_to_remove),
                                                                       end_time - start_time))
 
         return files_to_keep, files_to_remove, dict_image_to_duplicates
 
-    def show_a_duplicate(self, image_to_duplicates, image, output_path, image_w, image_h):
+    def show_an_image_duplicates(self, image_to_duplicates, image, output_path, image_w, image_h):
         """
         Show a duplicate.
         :param image_to_duplicates:
@@ -136,7 +136,7 @@ class NearDuplicateImageFinder(object):
         :return:
         """
 
-        print('Showing a duplicate...')
+        print('Showing duplicates...')
         duplicate = image_to_duplicates[image]
         files_to_show = []
 
@@ -144,6 +144,8 @@ class NearDuplicateImageFinder(object):
         files_to_show.append(ImgUtils.scale(ImgUtils.read_image_numpy(image_path, image_w, image_h)))
 
         duplicates_path = [f for f in list(self.df_dataset.iloc[duplicate]['file'])]
+        for path in duplicates_path:
+            print(path)
         duplicates_arr = [ImgUtils.scale(ImgUtils.read_image_numpy(f, image_w, image_h)) for f in duplicates_path]
         files_to_show.extend(duplicates_arr)
         fig_acc = plt.figure(figsize=(10, len(files_to_show) * 5))

@@ -5,8 +5,9 @@ from near_duplicate_image_finder.NearDuplicateImageFinder import NearDuplicateIm
 
 class cKDTreeFinder(NearDuplicateImageFinder):
 
-    def __init__(self, img_file_list, leaf_size=40, parallel=False, batch_size=32, verbose=0):
+    def __init__(self, img_file_list, distance_metric, leaf_size=40, parallel=False, batch_size=32, verbose=0):
         super().__init__(img_file_list, leaf_size, parallel, batch_size, verbose)
+        self.distance_metric = distance_metric
 
     def build_tree(self):
         print('Building the cKDTree...')
@@ -23,6 +24,14 @@ class cKDTreeFinder(NearDuplicateImageFinder):
         # For each image it contains an array containing the indices of k-nearest neighbors.
         if self.parallel:
             n_jobs = self.number_of_cpu
+        # TODO self.distance_metric for cKDTree is p
+        """
+        p : float, 1<=p<=infinity
+                    Which Minkowski p-norm to use. 
+                    1 is the sum-of-absolute-values "Manhattan" distance
+                    2 is the usual Euclidean distance
+                    infinity is the maximum-coordinate-difference distance
+        """
         distances, indices = self.tree.query(self.df_dataset[[str(i) for i in range(0, hash_str_len)]],
                                              k=nearest_neighbors, p=1, distance_upper_bound=threshold,
                                              n_jobs=n_jobs)

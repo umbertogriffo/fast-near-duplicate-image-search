@@ -6,29 +6,34 @@ import pandas as pd
 from PIL import Image
 from tqdm import tqdm
 
+hash_algo_dict = {'average_hash': imagehash.average_hash, 'dhash': imagehash.dhash, 'phash': imagehash.phash,
+                  'whash': imagehash.whash}
+
 
 class ImageToHashDataset(object):
 
-    def __init__(self, img_file_list, hash_size=16, verbose=0):
+    def __init__(self, img_file_list, hash_size=8, hash_algo='phash', verbose=0):
 
         self.img_file_list = img_file_list
         self.hash_size = hash_size
+        self.hash_algo = hash_algo
         self.verbose = verbose
         self.df_dataset = None
 
     @staticmethod
-    def img_hash(image_path, hash_size):
+    def img_hash(image_path, hash_size=8, hash_algo='phash'):
         """
 
-        Perceptual Hash computation.
+        Hash computation.
 
         Implementation follows http://www.hackerfactor.com/blog/index.php?/archives/432-Looks-Like-It.htm
 
         :param image_path: A filename (string).
         :param hash_size: The size of hash.
+        :param hash_algo: The hash algorithm.
         :return: an ImageHash.
         """
-        return imagehash.phash(Image.open(image_path), hash_size=hash_size)
+        return hash_algo_dict[hash_algo](Image.open(image_path), hash_size=hash_size)
 
     def build_dataset(self, parallel=False, batch_size=32):
         """
@@ -81,7 +86,7 @@ class ImageToHashDataset(object):
         # For each image calculate the phash and store it in a DataFrame
         for image in tqdm(self.img_file_list):
 
-            hash_code = self.img_hash(image, self.hash_size)
+            hash_code = self.img_hash(image, self.hash_size, self.hash_algo)
 
             result = {'file': image, 'short_file': image.split(os.sep)[-1], 'hash': hash_code,
                       'hash_list': list(str(hash_code))}
@@ -112,7 +117,7 @@ class ImageToHashDataset(object):
         result = {}
 
         for i, image in tqdm(enumerate(block)):
-            hash_code = self.img_hash(image, self.hash_size)
+            hash_code = self.img_hash(image, self.hash_size, self.hash_algo)
             result['file'] = result.get('file', []) + [image]
             result['short_file'] = result.get('short_file', []) + [image.split(os.sep)[-1]]
             result['hash'] = result.get('hash', []) + [hash_code]

@@ -101,15 +101,14 @@ def save_results(img_file_list_in, to_keep_in, to_remove_in, hash_size_in, thres
         copy_images(survived_df, output_path_in, 'survived')
 
 
-def get_tree(img_file_list_in, hash_size_in, leaf_size_in, parallel_in, batch_size_in):
-    df_dataset = ImageToHashDataset(img_file_list_in, hash_size=hash_size_in).build_dataset(parallel=parallel_in,
-                                                                                            batch_size=batch_size_in)
-
+def build_tree(df_dataset, distance_metric_in, leaf_size_in, parallel_in, batch_size_in):
     if args.tree_type == 'cKDTree':
-        near_duplicate_image_finder = cKDTreeFinder(df_dataset, leaf_size=leaf_size_in,
+        near_duplicate_image_finder = cKDTreeFinder(df_dataset, distance_metric=distance_metric_in,
+                                                    leaf_size=leaf_size_in,
                                                     parallel=parallel_in, batch_size=batch_size_in)
     elif args.tree_type == 'KDTree':
-        near_duplicate_image_finder = KDTreeFinder(df_dataset, leaf_size=leaf_size_in,
+        near_duplicate_image_finder = KDTreeFinder(df_dataset, distance_metric=distance_metric_in,
+                                                   leaf_size=leaf_size_in,
                                                    parallel=parallel_in, batch_size=batch_size_in)
 
     return near_duplicate_image_finder
@@ -153,18 +152,24 @@ if __name__ == '__main__':
     parser.add_argument("command",
                         metavar="<command>",
                         type=str,
-                        choices=['delete', 'show'])
-    parser.add_argument('--images_path',
+                        choices=['delete', 'show', 'search'])
+    parser.add_argument('--images-path',
                         required=True,
                         metavar="/path/to/images/",
                         type=str,
                         help='Directory containing images.')
-    parser.add_argument('--output_path',
+    parser.add_argument('--output-path',
                         required=True,
                         metavar="/path/to/output/",
                         type=str,
                         help='Directory containing results.')
-    parser.add_argument('--tree_type',
+    parser.add_argument("-q",
+                        "--query",
+                        required=False,
+                        metavar="/path/to/image/",
+                        type=str,
+                        help="path to the query image")
+    parser.add_argument('--tree-type',
                         required=False,
                         metavar="KDTree or cKDTree",
                         type=str,
@@ -178,37 +183,58 @@ if __name__ == '__main__':
                         const=True,
                         default='false',
                         help="Whether to parallelize the computation.")
-    parser.add_argument("--delete_keep",
+    parser.add_argument("--delete-keep",
                         type=CommandLineUtils.str2bool,
                         nargs='?',
                         const=True,
                         default='false',
                         help="Whether to delete the origin of duplication.")
-    parser.add_argument("--hash_size",
+    parser.add_argument("--hash-algorithm",
+                        type=str,
+                        default='phash',
+                        choices=['average_hash', 'dhash', 'phash', 'whash'],
+                        help="hash algorithm")
+    parser.add_argument("--hash-size",
                         type=int,
-                        default=16,
+                        default=8,
                         help="hash size")
-    parser.add_argument("--nearest_neighbors",
+    parser.add_argument("-d",
+                        "--distance-metric",
+                        required=False,
+                        default="manhattan",
+                        choices=[
+                            'euclidean',
+                            'l2',
+                            'minkowski',
+                            'p',
+                            'manhattan',
+                            'cityblock',
+                            'l1',
+                            'chebyshev',
+                            'infinity',
+                        ],
+                        help="distance metric")
+    parser.add_argument("--nearest-neighbors",
                         type=int,
-                        default=10,
+                        default=5,
                         help="# of nearest neighbors")
-    parser.add_argument("--leaf_size",
+    parser.add_argument("--leaf-size",
                         type=int,
                         default=40,
                         help="leaf size")
-    parser.add_argument("--batch_size",
+    parser.add_argument("--batch-size",
                         type=int,
                         default=32,
                         help="batch size")
     parser.add_argument("--threshold",
                         type=int,
-                        default=50,
+                        default=25,
                         help="threshold")
-    parser.add_argument("--image_w",
+    parser.add_argument("--image-w",
                         type=int,
                         default=128,
                         help="image width")
-    parser.add_argument("--image_h",
+    parser.add_argument("--image-h",
                         type=int,
                         default=128,
                         help="image height")
@@ -216,7 +242,7 @@ if __name__ == '__main__':
 
     # Validate arguments
     if args.command == "delete":
-        assert args.tree_type, "Argument --tree_type is required for deleting"
+        assert args.tree_type, "Argument --tree-type is required for deleting"
 
     output_path = os.path.join(args.output_path, dt)
     FileSystemUtils.mkdir_if_not_exist(output_path)
@@ -224,7 +250,9 @@ if __name__ == '__main__':
     if args.command == "delete":
         # Config
         images_path = args.images_path
+        hash_algo = args.hash_algorithm
         hash_size = args.hash_size
+        distance_metric = args.distance_metric
         nearest_neighbors = args.nearest_neighbors
         leaf_size = args.leaf_size
         parallel = args.parallel
@@ -236,30 +264,72 @@ if __name__ == '__main__':
 
         # Retrieve the images contained in output_path.
         img_file_list = get_images_list(images_path, natural_order=True)
-        near_duplicate_image_finder = get_tree(img_file_list, hash_size, leaf_size, parallel, batch_size)
+        # Build the dataset
+        df_dataset = ImageToHashDataset(img_file_list, hash_size=hash_size, hash_algo=hash_algo).build_dataset(
+            parallel=parallel,
+            batch_size=batch_size)
+        # Build the tree
+        near_duplicate_image_finder = build_tree(df_dataset, distance_metric, leaf_size, parallel, batch_size)
         # Find duplicates
         to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
                                                                                                    threshold)
         total_report = to_keep + to_remove
-        print('We have found {0}/{1} duplicates in folder'.format(len(total_report), len(img_file_list)))
+        print('We have found {0}/{1} duplicates in folder'.format(len(to_remove), len(img_file_list)))
         # Save results
         save_results(img_file_list, to_keep, to_remove, hash_size, threshold, output_path, delete_keep_in=delete_keep)
         # Show a duplicate
         if len(dict_image_to_duplicates) > 0:
             random_img = random.choice(list(dict_image_to_duplicates.keys()))
-            near_duplicate_image_finder.show_a_duplicate(dict_image_to_duplicates, random_img, output_path,
-                                                         image_w=image_w,
-                                                         image_h=image_h)
+            near_duplicate_image_finder.show_an_image_duplicates(dict_image_to_duplicates, random_img, output_path,
+                                                                 image_w=image_w,
+                                                                 image_h=image_h)
 
     if args.command == "show":
         # Config
         images_path = args.images_path
+        hash_algo = args.hash_algorithm
         hash_size = args.hash_size
         parallel = args.parallel
         batch_size = args.batch_size
 
-        # Retrieve the images contained in output_path.
+        # Retrieve the images contained in images_path.
         img_file_list = get_images_list(images_path, natural_order=True)
-        df_dataset = ImageToHashDataset(img_file_list, hash_size=hash_size).build_dataset(parallel=parallel,
-                                                                                          batch_size=batch_size)
+        # Build the dataset
+        df_dataset = ImageToHashDataset(img_file_list, hash_size=hash_size, hash_algo=hash_algo).build_dataset(
+            parallel=parallel,
+            batch_size=batch_size)
         show(df_dataset, output_path)
+
+    if args.command == "search":
+        # Config
+        images_path = args.images_path
+        hash_algo = args.hash_algorithm
+        hash_size = args.hash_size
+        distance_metric = args.distance_metric
+        nearest_neighbors = args.nearest_neighbors
+        leaf_size = args.leaf_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+        threshold = args.threshold
+        delete_keep = args.delete_keep
+        image_w = args.image_w
+        image_h = args.image_h
+        query = args.query
+
+        # Retrieve the images contained in images_path.
+        img_file_list = get_images_list(images_path, natural_order=True)
+        # Build the dataset
+        df_dataset = ImageToHashDataset(img_file_list, hash_size=hash_size, hash_algo=hash_algo).build_dataset(
+            parallel=parallel,
+            batch_size=batch_size)
+        # Build the tree
+        near_duplicate_image_finder = build_tree(df_dataset, distance_metric, leaf_size, parallel, batch_size)
+        # Get the image's id
+        image_id = df_dataset[df_dataset['file'] == query].index.values.astype(int)[0]
+        # Find the images's duplicates
+        # TODO I don't need to find all duplicates
+        to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
+                                                                                                   threshold)
+        near_duplicate_image_finder.show_an_image_duplicates(dict_image_to_duplicates, image_id, output_path,
+                                                             image_w=image_w,
+                                                             image_h=image_h)

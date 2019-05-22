@@ -161,3 +161,5 @@ References
 * [Visualizing Embeddings With t-SNE](https://www.kaggle.com/colinmorris/visualizing-embeddings-with-t-sne)
 * [t-SNE visualization of CNN codes](https://cs.stanford.edu/people/karpathy/cnnembed/)
 * [Benchmarking Nearest Neighbor Searches in Python](https://jakevdp.github.io/blog/2013/04/29/benchmarking-nearest-neighbor-searches-in-python/)
+* [Fingerprinting Images for Near-Duplicate Detection](https://realpython.com/fingerprinting-images-for-near-duplicate-detection/)
+* [Image dataset - Caltech 101](http://www.vision.caltech.edu/Image_Datasets/Caltech101/)
