@@ -47,8 +47,8 @@ KDTree is a useful for several applications, such as searches involving a multid
 
 where **n** is the number of points.
 
-Installation
-==============
+Installation On Ubuntu 18.04
+============================
 ### Requirements:
 - ImageHash 4.0 
 - matplotlib
@@ -59,11 +59,31 @@ Installation
 - pillow
 - natsort
 
+### Install Anaconda: 
+```
+cd /tmp
+curl -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
+sha256sum Anaconda3-5.0.1-Linux-x86_64.sh
+```
+ 55e4db1919f49c92d5abbf27a4be5986ae157f074bf9f8238963cd4582a4068a
+```
+bash Anaconda3-5.0.1-Linux-x86_64.sh
+```
+To active the installation
+```
+source ~/.bashrc
+```
+To verify the installation
+```
+conda list
+```
+
 ### Option 1: TL;DR 
-Install Anaconda and then create the environment using `fast_near_duplicate_img_src_py3.yml`:
+Create the environment using `fast_near_duplicate_img_src_py3.yml`:
 ```
 conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
+
 ### Option 2: Step-by-step installation
 First, make sure that your conda is setup properly with the right environment
 for that, check that `which conda`, `which pip` and `which python` points to the

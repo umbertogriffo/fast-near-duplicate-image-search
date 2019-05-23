@@ -23,26 +23,26 @@ if __name__ == '__main__':
     parser.add_argument("command",
                         metavar="<command>",
                         type=str,
-                        choices=['delete', 'show', 'search'])
+                        choices=['delete', 'show', 'search'],
+                        help='delete or show or search.')
     parser.add_argument('--images-path',
                         required=True,
                         metavar="/path/to/images/",
                         type=str,
-                        help='Directory containing images.')
+                        help='The Directory containing images.')
     parser.add_argument('--output-path',
                         required=True,
                         metavar="/path/to/output/",
                         type=str,
-                        help='Directory containing results.')
+                        help='The Directory containing results.')
     parser.add_argument("-q",
                         "--query",
                         required=False,
                         metavar="/path/to/image/",
                         type=str,
-                        help="path to the query image")
+                        help="Path to the query image")
     parser.add_argument('--tree-type',
                         required=False,
-                        metavar="KDTree or cKDTree",
                         type=str,
                         choices=['KDTree', 'cKDTree'],
                         default='KDTree')
@@ -64,11 +64,11 @@ if __name__ == '__main__':
                         type=str,
                         default='phash',
                         choices=['average_hash', 'dhash', 'phash', 'whash'],
-                        help="hash algorithm")
+                        help="Hash algorithm to use.")
     parser.add_argument("--hash-size",
                         type=int,
                         default=8,
-                        help="hash size")
+                        help="Hash size to use.")
     parser.add_argument("-d",
                         "--distance-metric",
                         required=False,
@@ -84,36 +84,32 @@ if __name__ == '__main__':
                             'chebyshev',
                             'infinity',
                         ],
-                        help="distance metric")
+                        help="Distance metric to use")
     parser.add_argument("--nearest-neighbors",
                         type=int,
                         default=5,
-                        help="# of nearest neighbors")
+                        help="# of nearest neighbors.")
     parser.add_argument("--leaf-size",
                         type=int,
                         default=40,
-                        help="leaf size")
-    parser.add_argument("--batch-size",
-                        type=int,
-                        default=32,
-                        help="batch size")
+                        help="Leaf size of the tree.")
     parser.add_argument("--threshold",
                         type=int,
                         default=25,
-                        help="threshold")
+                        help="Threshold.")
+    parser.add_argument("--batch-size",
+                        type=int,
+                        default=32,
+                        help="The batch size is used when parallel is set to true.")
     parser.add_argument("--image-w",
                         type=int,
                         default=128,
-                        help="image width")
+                        help="Image width.")
     parser.add_argument("--image-h",
                         type=int,
                         default=128,
-                        help="image height")
+                        help="Image height.")
     args = parser.parse_args()
-
-    # Validate arguments
-    if args.command == "delete":
-        assert args.tree_type, "Argument --tree-type is required for deleting"
 
     output_path = os.path.join(args.output_path, dt)
     FileSystemUtils.mkdir_if_not_exist(output_path)
