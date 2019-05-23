@@ -2,6 +2,7 @@
 # python compare.py --image-a images/84eba74d-38ae-4bf6-b8bd-79ffa1dad23a.jpg --image-b images/1a4c0d2c-a478-470b-ba5d-2d02b6c0290a.jpg
 
 import argparse
+import numpy as np
 
 import imagehash
 from PIL import Image
@@ -44,9 +45,20 @@ for hash in hash_algo_list:
 
     print("\nCalculate distance:")
     dist = DistanceMetric.get_metric('manhattan')
-    ndarr_h_a = hash(image_a).hash.reshape((1, 64)).astype(int)
-    ndarr_h_b = hash(image_b).hash.reshape((1, 64)).astype(int)
-    print(ndarr_h_a)
-    print(ndarr_h_b)
-    dist = dist.pairwise(ndarr_h_a, ndarr_h_b)
-    print("{}".format(dist[0][0]))
+    # Convert a hex string to an int
+    ndarr_int_h_a = np.array([int(i, 16) for i in h_a]).reshape((1, 16)).astype(int)
+    ndarr_int_h_b = np.array([int(i, 16) for i in h_b]).reshape((1, 16)).astype(int)
+    # Convert a hex string to binary representation
+    ndarr_bin_h_a = hash(image_a).hash.reshape((1, 64)).astype(int)
+    ndarr_bin_h_b = hash(image_b).hash.reshape((1, 64)).astype(int)
+
+    print(ndarr_int_h_a)
+    print(ndarr_int_h_b)
+    dist_int = dist.pairwise(ndarr_int_h_a, ndarr_int_h_b)
+    print("{}".format(dist_int[0][0]))
+
+    print(ndarr_bin_h_a)
+    print(ndarr_bin_h_b)
+    dist_bin = dist.pairwise(ndarr_bin_h_a, ndarr_bin_h_b)
+    print("{}".format(dist_bin[0][0]))
+

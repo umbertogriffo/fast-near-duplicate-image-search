@@ -15,7 +15,7 @@ class cKDTreeFinder(NearDuplicateImageFinder):
         hash_str_len = len(self.df_dataset.at[0, 'hash_list'])
         self.tree = cKDTree(self.df_dataset[[str(i) for i in range(0, hash_str_len)]], leafsize=self.leaf_size)
 
-    def find(self, nearest_neighbors=10, threshold=150):
+    def _find_all(self, nearest_neighbors=5, threshold=10):
         n_jobs = 1
         hash_str_len = len(self.df_dataset.at[0, 'hash_list'])
         # 'distances' is a matrix NxM where N is the number of images and M is the value of nearest_neighbors_in.
@@ -35,5 +35,20 @@ class cKDTreeFinder(NearDuplicateImageFinder):
         distances, indices = self.tree.query(self.df_dataset[[str(i) for i in range(0, hash_str_len)]],
                                              k=nearest_neighbors, p=1, distance_upper_bound=threshold,
                                              n_jobs=n_jobs)
+
+        return distances, indices
+
+    def _find(self, image_id, nearest_neighbors=5, threshold=10):
+        print('Finding duplicates...')
+        n_jobs = 1
+        if self.parallel:
+            n_jobs = self.number_of_cpu
+
+        hash_str_len = len(self.df_dataset.at[0, 'hash_list'])
+
+        distances, indices = self.tree.query(
+            self.df_dataset[[str(i) for i in range(0, hash_str_len)]].iloc[image_id].values.reshape(1, -1),
+            k=nearest_neighbors, p=1, distance_upper_bound=threshold,
+            n_jobs=n_jobs)
 
         return distances, indices

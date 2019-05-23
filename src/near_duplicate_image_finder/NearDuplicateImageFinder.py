@@ -48,12 +48,46 @@ class NearDuplicateImageFinder(object):
     def build_tree(self):
         raise NotImplementedError('subclasses must override build_tree()!')
 
-    def find(self, nearest_neighbors=10, threshold=150):
-        raise NotImplementedError('subclasses must override build_tree()!')
+    def _find(self, image_id, nearest_neighbors=5, threshold=10):
+        raise NotImplementedError('subclasses must override find()!')
 
-    def find_duplicates(self, nearest_neighbors=10, threshold=150):
+    def _find_all(self, nearest_neighbors=5, threshold=10):
+        raise NotImplementedError('subclasses must override find_all()!')
+
+    def find_near_duplicates(self, image_id, nearest_neighbors=5, threshold=10):
         """
-        Find similar images.
+        Find near duplicates of an image.
+        :param image_id:
+        :param nearest_neighbors:
+        :param threshold:
+        :return:
+        """
+        print('Finding duplicates...')
+        start_time = time.time()
+
+        distances, indices = self._find(image_id, nearest_neighbors, threshold)
+        max_distance = distances.max()
+        print("\t Max distance: {}".format(max_distance))
+        # Find the indices of distances elements that are non-zero and less or equal to threshold_in.
+        above_threshold_idx = np.argwhere((distances <= threshold) & (distances > 0))
+        positions = [i[1] for i in above_threshold_idx]
+
+        above_threshold_distances = []
+        above_threshold_indices = []
+        for i, (distance, idx) in enumerate(zip(distances[0], indices[0])):
+            if idx != image_id and i in positions:
+                above_threshold_distances.append(distance)
+                above_threshold_indices.append(idx)
+
+        end_time = time.time()
+
+        print("{0} duplicates has been founded in {1} seconds".format(len(above_threshold_indices),
+                                                                      end_time - start_time))
+        return above_threshold_distances, above_threshold_indices
+
+    def find_all_near_duplicates(self, nearest_neighbors=5, threshold=10):
+        """
+        Find near duplicated images.
         :param nearest_neighbors:
         :param threshold:
         :return: files_to_keep, files_to_remove, dict_image_to_duplicates
@@ -69,7 +103,7 @@ class NearDuplicateImageFinder(object):
         # For each image it contains an array containing the distances of k-nearest neighbors.
         # 'indices' is a matrix NxM where N is the number of images and M is the value of nearest_neighbors_in.
         # For each image it contains an array containing the indices of k-nearest neighbors.
-        distances, indices = self.find(nearest_neighbors, threshold)
+        distances, indices = self._find_all(nearest_neighbors, threshold)
         max_distance = distances.max()
         print("\t Max distance: {}".format(max_distance))
         min_distance = distances.min()
@@ -127,7 +161,7 @@ class NearDuplicateImageFinder(object):
 
     def show_an_image_duplicates(self, image_to_duplicates, image, output_path, image_w, image_h):
         """
-        Show a duplicate.
+        Show near duplicates.
         :param image_to_duplicates:
         :param image:
         :param output_path:

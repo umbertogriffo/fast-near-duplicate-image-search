@@ -4,6 +4,8 @@ import datetime
 import os
 import random
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from natsort import natsorted
 from sklearn.manifold import TSNE
@@ -14,6 +16,7 @@ from near_duplicate_image_finder.KDTreeFinder import KDTreeFinder
 from near_duplicate_image_finder.cKDTreeFinder import cKDTreeFinder
 from utils.CommandLineUtils import CommandLineUtils
 from utils.FileSystemUtils import FileSystemUtils
+from utils.ImgUtils import ImgUtils
 from utils.PlotUtils import PlotUtils
 
 """
@@ -271,8 +274,9 @@ if __name__ == '__main__':
         # Build the tree
         near_duplicate_image_finder = build_tree(df_dataset, distance_metric, leaf_size, parallel, batch_size)
         # Find duplicates
-        to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
-                                                                                                   threshold)
+        to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_all_near_duplicates(
+            nearest_neighbors,
+            threshold)
         total_report = to_keep + to_remove
         print('We have found {0}/{1} duplicates in folder'.format(len(to_remove), len(img_file_list)))
         # Save results
@@ -326,10 +330,26 @@ if __name__ == '__main__':
         near_duplicate_image_finder = build_tree(df_dataset, distance_metric, leaf_size, parallel, batch_size)
         # Get the image's id
         image_id = df_dataset[df_dataset['file'] == query].index.values.astype(int)[0]
-        # Find the images's duplicates
-        # TODO I don't need to find all duplicates
-        to_keep, to_remove, dict_image_to_duplicates = near_duplicate_image_finder.find_duplicates(nearest_neighbors,
-                                                                                                   threshold)
-        near_duplicate_image_finder.show_an_image_duplicates(dict_image_to_duplicates, image_id, output_path,
-                                                             image_w=image_w,
-                                                             image_h=image_h)
+        # Find the images's near duplicates
+        distances, indices = near_duplicate_image_finder.find_near_duplicates(image_id, nearest_neighbors, threshold)
+        # Show the near duplicates
+        if len(distances) > 0 and len(indices) > 0:
+
+            for distance, idx in zip(distances, indices):
+                print("{0} distance:{1}".format(df_dataset.iloc[idx]['file'], distance))
+
+            image_path = df_dataset.iloc[image_id]['file']
+            files_to_show = []
+            files_to_show.append(ImgUtils.scale(ImgUtils.read_image_numpy(image_path, image_w, image_h)))
+
+            duplicates_path = [f for f in list(df_dataset.iloc[indices]['file'])]
+            duplicates_arr = [ImgUtils.scale(ImgUtils.read_image_numpy(f, image_w, image_h)) for f in duplicates_path]
+            files_to_show.extend(duplicates_arr)
+            fig_acc = plt.figure(figsize=(10, len(files_to_show) * 5))
+            plt.imshow(ImgUtils.mosaic_images(np.asarray(files_to_show), len(files_to_show)))
+            fig_acc.savefig(os.path.join(output_path, image_path.split(os.path.sep)[-1]))
+            plt.show()
+            plt.cla()
+            plt.close()
+        else:
+            print("The image doesn't have near duplicates.")
