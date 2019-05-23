@@ -11,7 +11,7 @@ In addition, near-duplicate images can be visualized generating a
 [t-SNE (t-distributed Stochastic Neighbor Embedding)](https://lvdmaaten.github.io/tsne/) 
 using a feature vector for each image derived from the **pHash** function.
 
-![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/phase.png)
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/phase.png)
 
 > I take no responsibility for bugs in this script or accidentally deleted pictures. 
 > Use at your own risk. Make sure you back up your pictures before using.
@@ -21,7 +21,7 @@ using a feature vector for each image derived from the **pHash** function.
 Features in the image are used to generate a distinct (but not unique) fingerprint, and these fingerprints are comparable.
 [Perceptual hashes](http://hackerfactor.com/blog/index.php%3F/archives/432-Looks-Like-It.html) are a different concept compared to cryptographic hash functions like **MD5** and **SHA1**.
 
-![phash](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/phash.png)
+![phash](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/phash.png)
 
 With cryptographic hashes, the hash values are random. The data used to generate the hash acts like a random seed, 
 so the same data will generate the same result, but different data will create different results.
@@ -120,7 +120,7 @@ We have found 189/426 not duplicates in folder
 ```
 $ app.py show --images_path <target_dir> --output_path <output_dir>
 ```
-![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/images/resized_cluster.png)
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/resized_cluster.png)
 
 Todo
 ====
