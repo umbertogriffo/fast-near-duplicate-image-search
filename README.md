@@ -2,8 +2,7 @@
 * Author: Umberto Griffo
 * Twitter: @UmbertoGriffo
 
-This Python script is a command line tool for visualize, checking and deleting near-duplicate images based on 
-**perceptual hash** from the target directory.
+This Python script is a command line tool for visualizing, checking and deleting near-duplicate images from the target directory.
 In order to find similar images this script hashes the images using **pHash** from 
 [ImageHash](https://pypi.org/project/ImageHash/) library,
 adding the hash into a **KDTree** and perform a **nearest neighbours** search.
@@ -59,7 +58,13 @@ Installation On Ubuntu 18.04
 - pillow
 - natsort
 
-### Install Anaconda: 
+### Option 1: TL;DR
+The best way to install (and uninstall) this app is to use pip (pip3 for Python 3). 
+In the root directory of the CLI source code, running `install.sh` will install this app using setup.py as “instructions”. 
+Likewise, running `uninstall.sh` will remove the app.
+
+### Option 2: Anaconda 
+#### Install Anaconda: 
 ```
 cd /tmp
 curl -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
@@ -77,15 +82,14 @@ To verify the installation
 ```
 conda list
 ```
-
-### Option 1: TL;DR 
-Create the environment using `fast_near_duplicate_img_src_py3.yml`:
+####Create the environment using `fast_near_duplicate_img_src_py3.yml`:
 ```
 conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
 
-### Option 2: Step-by-step installation
-First, make sure that your conda is setup properly with the right environment
+### Option 3: Step-by-step installation
+Install Anaconda as showed at previous point.
+Make sure that your conda is setup properly with the right environment
 for that, check that `which conda`, `which pip` and `which python` points to the
 right path. From a clean conda env, this is what you need to do.
 ##### Let’s create an Anaconda environments

@@ -3,18 +3,19 @@ import argparse
 import datetime
 import os
 
-from app_functions.delete import delete
-from app_functions.search import search
-from app_functions.show import show
-from utils.CommandLineUtils import CommandLineUtils
-from utils.FileSystemUtils import FileSystemUtils
+from deduplication.commands.search import search
+from deduplication.commands.show import show
+from deduplication.utils.CommandLineUtils import CommandLineUtils
+from deduplication.utils.FileSystemUtils import FileSystemUtils
+
+from deduplication.commands import delete
 
 """
 (C) Umberto Griffo, 2019
 """
 
-if __name__ == '__main__':
 
+def main():
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
 
     # Parse command line arguments
@@ -46,20 +47,10 @@ if __name__ == '__main__':
                         type=str,
                         choices=['KDTree', 'cKDTree'],
                         default='KDTree')
-    parser.add_argument('--parallel',
-                        required=False,
-                        metavar="parallel",
-                        type=CommandLineUtils.str2bool,
-                        nargs='?',
-                        const=True,
-                        default='false',
-                        help="Whether to parallelize the computation.")
-    parser.add_argument("--delete-keep",
-                        type=CommandLineUtils.str2bool,
-                        nargs='?',
-                        const=True,
-                        default='false',
-                        help="Whether to delete the origin of duplication.")
+    parser.add_argument("--leaf-size",
+                        type=int,
+                        default=40,
+                        help="Leaf size of the tree.")
     parser.add_argument("--hash-algorithm",
                         type=str,
                         default='phash',
@@ -89,26 +80,36 @@ if __name__ == '__main__':
                         type=int,
                         default=5,
                         help="# of nearest neighbors.")
-    parser.add_argument("--leaf-size",
-                        type=int,
-                        default=40,
-                        help="Leaf size of the tree.")
     parser.add_argument("--threshold",
                         type=int,
                         default=25,
                         help="Threshold.")
+    parser.add_argument('--parallel',
+                        required=False,
+                        metavar="parallel",
+                        type=CommandLineUtils.str2bool,
+                        nargs='?',
+                        const=True,
+                        default='false',
+                        help="Whether to parallelize the computation.")
     parser.add_argument("--batch-size",
                         type=int,
                         default=32,
                         help="The batch size is used when parallel is set to true.")
+    parser.add_argument("--delete-keep",
+                        type=CommandLineUtils.str2bool,
+                        nargs='?',
+                        const=True,
+                        default='false',
+                        help="Whether to delete the image having duplicates.")
     parser.add_argument("--image-w",
                         type=int,
                         default=128,
-                        help="Image width.")
+                        help="The source image is resized down to or up to the specified size.")
     parser.add_argument("--image-h",
                         type=int,
                         default=128,
-                        help="Image height.")
+                        help="The source image is resized down to or up to the specified size.")
     args = parser.parse_args()
 
     output_path = os.path.join(args.output_path, dt)
@@ -179,6 +180,7 @@ if __name__ == '__main__':
 
         search(images_path,
                output_path,
+               hash_algo,
                hash_size,
                tree_type,
                distance_metric,
@@ -190,3 +192,7 @@ if __name__ == '__main__':
                image_w,
                image_h,
                query)
+
+
+if __name__ == '__main__':
+    main()

@@ -3,13 +3,14 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from app_functions.helpers import get_images_list, build_tree
-from dataset.ImageToHashDataset import ImageToHashDataset
-from utils.ImgUtils import ImgUtils
+from deduplication.commands.helpers import get_images_list, build_tree
+from deduplication.dataset.ImageToHashDataset import ImageToHashDataset
+from deduplication.utils.ImgUtils import ImgUtils
 
 
 def search(images_path,
            output_path,
+           hash_algo,
            hash_size,
            tree_type,
            distance_metric,

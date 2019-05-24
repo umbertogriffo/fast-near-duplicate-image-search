@@ -1,7 +1,7 @@
 import random
 
-from app_functions.helpers import get_images_list, build_tree, save_results
-from dataset.ImageToHashDataset import ImageToHashDataset
+from deduplication.commands.helpers import get_images_list, build_tree, save_results
+from deduplication.dataset.ImageToHashDataset import ImageToHashDataset
 
 
 def delete(images_path,

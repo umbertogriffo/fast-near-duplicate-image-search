@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 
-from utils.ImgUtils import ImgUtils
+from deduplication.utils.ImgUtils import ImgUtils
 
 """
 (C) Umberto Griffo, 2019
@@ -33,7 +33,7 @@ class NearDuplicateImageFinder(object):
             if number_of_cpu >= 2:
                 self.number_of_cpu = number_of_cpu
             else:
-                raise ValueError("Number of CPU must greater than or equal to 2.")
+                raise ValueError("Number of CPU must be greater than or equal to 2.")
 
         self.build_tree()
 
