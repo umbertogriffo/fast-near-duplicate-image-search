@@ -136,11 +136,14 @@ We have found 189/426 not duplicates in folder
 ```
 #### Find near-duplicated images from an image you specified
 ```
-$ deduplication search --images_path <target_dir> --output_path <output_dir> --query <specify a query image file>
+$ deduplication search \
+ --images_path <target_dir> \
+ --output_path <output_dir> \
+ --query <specify a query image file>
 ```
 For example:
 ```
-deduplication search \
+$ deduplication search \
 --images-path datasets/potatoes \
 --output-path outputs \
 --tree-type KDTree \
