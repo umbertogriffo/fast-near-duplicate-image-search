@@ -1,14 +1,12 @@
-#!/usr/bin/env python
 import argparse
 import datetime
 import os
 
-from deduplication.commands.search import search
-from deduplication.commands.show import show
-from deduplication.utils.CommandLineUtils import CommandLineUtils
-from deduplication.utils.FileSystemUtils import FileSystemUtils
-
-from deduplication.commands import delete
+from commands.search import search
+from commands.show import show
+from commands.delete import delete
+from utils.CommandLineUtils import CommandLineUtils
+from utils.FileSystemUtils import FileSystemUtils
 
 """
 (C) Umberto Griffo, 2019

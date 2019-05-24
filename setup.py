@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# coding: utf-8
 # Package and distribution management.
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('LICENSE') as f:
     license = f.read()
@@ -16,7 +17,8 @@ setup(
     author_email='umberto.griffo@gmail.com',
     url='https://github.com/umbertogriffo/fast-near-duplicate-image-search',
     license=license,
-    packages=['deduplication'],
+    packages=find_packages(exclude=("tests","experiments",)),
+    include_package_data=True,
     install_requires=[
         "certifi==2019.3.9"
         , "cycler==0.10.0"

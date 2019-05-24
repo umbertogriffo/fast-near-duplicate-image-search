@@ -4,9 +4,9 @@ import pandas as pd
 from natsort import natsorted
 from tqdm import tqdm
 
-from deduplication.duplicatefinder.KDTreeFinder import KDTreeFinder
-from deduplication.duplicatefinder.cKDTreeFinder import cKDTreeFinder
-from deduplication.utils import FileSystemUtils
+from duplicatefinder.KDTreeFinder import KDTreeFinder
+from duplicatefinder.cKDTreeFinder import cKDTreeFinder
+from utils import FileSystemUtils
 
 # List mime types fully supported by Pillow
 image_extensions = ['.bmp', '.jp2', 'pcx', '.jpe', '.jpg', '.jpeg', '.tif', '.gif', '.tiff', '.rgb', '.png', 'x-ms-bmp',

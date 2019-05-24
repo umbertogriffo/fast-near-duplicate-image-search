@@ -14,11 +14,14 @@ using a feature vector for each image derived from the **pHash** function.
 
 > I take no responsibility for bugs in this script or accidentally deleted pictures. 
 > Use at your own risk. Make sure you back up your pictures before using.
+> This algorithm is intended to find nearly duplicate images. It is NOT intended to find images that are conceptually 
+similar.
 
 ## pHash definition
 
 Features in the image are used to generate a distinct (but not unique) fingerprint, and these fingerprints are comparable.
-[Perceptual hashes](http://hackerfactor.com/blog/index.php%3F/archives/432-Looks-Like-It.html) are a different concept compared to cryptographic hash functions like **MD5** and **SHA1**.
+[Perceptual hashes](http://hackerfactor.com/blog/index.php%3F/archives/432-Looks-Like-It.html) are a different concept 
+compared to cryptographic hash functions like **MD5** and **SHA1**.
 
 ![phash](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/phash.png)
 
@@ -48,15 +51,6 @@ where **n** is the number of points.
 
 Installation On Ubuntu 18.04
 ============================
-### Requirements:
-- ImageHash 4.0 
-- matplotlib
-- scikit-learn
-- scipy
-- numpy
-- pandas
-- pillow
-- natsort
 
 ### Option 1: TL;DR
 The best way to install (and uninstall) this app is to use pip (pip3 for Python 3). 
@@ -82,7 +76,7 @@ To verify the installation
 ```
 conda list
 ```
-####Create the environment using `fast_near_duplicate_img_src_py3.yml`:
+#### Create the environment using `fast_near_duplicate_img_src_py3.yml`:
 ```
 conda env create -f fast_near_duplicate_img_src_py3.yml
 ```
@@ -123,7 +117,7 @@ Usage
 #### Delete near-duplicate images from the target directory
 
 ```
-$ app.py delete --images_path <target_dir> --output_path <output_dir> --tree_type KDTree
+$ deduplication delete --images_path <target_dir> --output_path <output_dir> --tree_type KDTree
 ```
 ```
 Building the dataset...
@@ -140,9 +134,15 @@ Finding duplicates...
 We have found 365/426 duplicates in folder
 We have found 189/426 not duplicates in folder
 ```
+#### Find near-duplicated images from an image you specified
+```
+$ deduplication search --images_path <target_dir> --output_path <output_dir> --query <specify a query image file>
+```
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/resized_cluster.png)
+
 #### Show near-duplicate images from the target directory With t-SNE 
 ```
-$ app.py show --images_path <target_dir> --output_path <output_dir>
+$ deduplication show --images_path <target_dir> --output_path <output_dir>
 ```
 ![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/resized_cluster.png)
 

@@ -2,9 +2,9 @@ import os
 
 from sklearn.manifold import TSNE
 
-from deduplication.commands.helpers import get_images_list
-from deduplication.dataset.ImageToHashDataset import ImageToHashDataset
-from deduplication.utils.PlotUtils import PlotUtils
+from commands.helpers import get_images_list
+from dataset.ImageToHashDataset import ImageToHashDataset
+from utils.PlotUtils import PlotUtils
 
 
 def show(images_path,
