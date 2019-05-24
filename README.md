@@ -138,7 +138,7 @@ We have found 189/426 not duplicates in folder
 ```
 $ deduplication search --images_path <target_dir> --output_path <output_dir> --query <specify a query image file>
 ```
-![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/resized_cluster.png)
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/search.png)
 
 #### Show near-duplicate images from the target directory With t-SNE 
 ```
