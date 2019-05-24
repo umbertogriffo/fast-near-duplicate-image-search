@@ -138,6 +138,21 @@ We have found 189/426 not duplicates in folder
 ```
 $ deduplication search --images_path <target_dir> --output_path <output_dir> --query <specify a query image file>
 ```
+For example:
+```
+deduplication search \
+--images-path datasets/potatoes \
+--output-path outputs \
+--tree-type KDTree \
+--threshold 40 \
+--parallel f \
+--nearest-neighbors 5 \
+--hash-algorithm phash \
+--hash-size 8 \
+--distance-metric manhattan \
+--query datasets/potatoes/2018-12-11-15-031193.png
+```
+
 ![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/search.png)
 
 #### Show near-duplicate images from the target directory With t-SNE 
