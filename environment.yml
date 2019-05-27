@@ -82,5 +82,6 @@ dependencies:
     - imagehash==4.0
     - opencv-contrib-python==4.0.0.21
     - pywavelets==1.0.3
+    - versioneer==0.18
 prefix: /home/umberto/anaconda3/envs/fast_near_duplicate_img_src_py3
 

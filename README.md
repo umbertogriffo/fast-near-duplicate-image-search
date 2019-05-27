@@ -111,6 +111,11 @@ pip install opencv-contrib-python==4.0.0.21
 
 # Pytest 4.1.1 in order to develop Unit/Mock test
 pip install -U pytest
+
+# Versioneer 0.18 in order to manage the version number
+# https://github.com/warner/python-versioneer
+pip install versioneer
+
 ```
 Usage
 =====

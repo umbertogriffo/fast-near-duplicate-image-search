@@ -3,13 +3,15 @@
 # Package and distribution management.
 
 from setuptools import setup, find_packages
+import versioneer
 
 with open('LICENSE') as f:
     license = f.read()
 
 setup(
     name='deduplication',
-    version='0.1.0',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description='Fast Near-Duplicate Image Search and Delete.',
     long_description='This Python script is a command line tool for visualizing, checking and deleting near-duplicate '
                      'images from the target directory.',
@@ -64,7 +66,8 @@ setup(
         , "six==1.12.0"
         , "statsmodels==0.9.0"
         , "tornado==6.0.2"
-        , "tqdm==4.31.1"],
+        , "tqdm==4.31.1"
+        , "versioneer==0.18"],
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [

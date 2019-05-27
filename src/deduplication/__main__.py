@@ -14,6 +14,7 @@ from utils.FileSystemUtils import FileSystemUtils
 
 
 def main():
+
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
 
     # Parse command line arguments
