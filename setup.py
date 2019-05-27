@@ -17,6 +17,23 @@ setup(
     author_email='umberto.griffo@gmail.com',
     url='https://github.com/umbertogriffo/fast-near-duplicate-image-search',
     license=license,
+    classifiers=[
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        'Development Status :: 3 - Alpha',
+
+        # Indicate who your project is intended for
+        'Intended Audience :: Developers',
+
+        # Pick your license as you wish (should match "license" above)
+        'License :: OSI Approved :: Apache Software License',
+
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 3.6',
+    ],
     # include all packages under src
     packages=find_packages('src', exclude=["experiments", "*.tests", "*.tests.*", "tests.*", "tests"]),
     # tell distutils packages are under src
@@ -48,6 +65,7 @@ setup(
         , "statsmodels==0.9.0"
         , "tornado==6.0.2"
         , "tqdm==4.31.1"],
+    python_requires='>=3.6',
     entry_points={
         'console_scripts': [
             'deduplication = deduplication.__main__:main'
