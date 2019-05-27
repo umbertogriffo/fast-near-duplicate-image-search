@@ -171,7 +171,6 @@ def main():
         parallel = args.parallel
         batch_size = args.batch_size
         threshold = args.threshold
-        delete_keep = args.delete_keep
         image_w = args.image_w
         image_h = args.image_h
         query = args.query
