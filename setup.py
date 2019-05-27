@@ -17,7 +17,10 @@ setup(
     author_email='umberto.griffo@gmail.com',
     url='https://github.com/umbertogriffo/fast-near-duplicate-image-search',
     license=license,
-    packages=find_packages(exclude=("tests","experiments",)),
+    # include all packages under src
+    packages=find_packages('src', exclude=["experiments", "*.tests", "*.tests.*", "tests.*", "tests"]),
+    # tell distutils packages are under src
+    package_dir={'': 'src'},
     include_package_data=True,
     install_requires=[
         "certifi==2019.3.9"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source activate fast_near_duplicate_img_src_py3
-python3 deduplication/__main__.py search \
+python3 src/deduplication/__main__.py search \
 --images-path datasets/potatoes \
 --output-path outputs \
 --tree-type KDTree \
