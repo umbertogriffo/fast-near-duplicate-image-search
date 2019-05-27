@@ -43,7 +43,7 @@ def get_config():
     cfg.style = "pep440"
     cfg.tag_prefix = "deduplicate-"
     cfg.parentdir_prefix = "deduplicate-"
-    cfg.versionfile_source = "src/_version.py"
+    cfg.versionfile_source = "src/deduplication/_version.py"
     cfg.verbose = False
     return cfg
 
