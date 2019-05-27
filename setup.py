@@ -3,6 +3,7 @@
 # Package and distribution management.
 
 from setuptools import setup, find_packages
+
 import versioneer
 
 with open('LICENSE') as f:
@@ -10,8 +11,9 @@ with open('LICENSE') as f:
 
 setup(
     name='deduplication',
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
+    # version=versioneer.get_version(),
+    # To upload on PyPi -> Cannot use PEP 440 local versions.
+    version=versioneer.get_version().split('+')[0],
     description='Fast Near-Duplicate Image Search and Delete.',
     long_description='This Python script is a command line tool for visualizing, checking and deleting near-duplicate '
                      'images from the target directory.',

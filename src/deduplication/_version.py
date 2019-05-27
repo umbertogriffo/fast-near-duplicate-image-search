@@ -41,7 +41,7 @@ def get_config():
     cfg = VersioneerConfig()
     cfg.VCS = "git"
     cfg.style = "pep440"
-    cfg.tag_prefix = "deduplicate-"
+    cfg.tag_prefix = ""
     cfg.parentdir_prefix = "deduplicate-"
     cfg.versionfile_source = "src/deduplication/_version.py"
     cfg.verbose = False

@@ -2,9 +2,9 @@ import argparse
 import datetime
 import os
 
+from commands.delete import delete
 from commands.search import search
 from commands.show import show
-from commands.delete import delete
 from utils.CommandLineUtils import CommandLineUtils
 from utils.FileSystemUtils import FileSystemUtils
 
@@ -14,7 +14,8 @@ from utils.FileSystemUtils import FileSystemUtils
 
 
 def main():
-
+    from _version import get_versions
+    __version__ = get_versions()['version']
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
 
     # Parse command line arguments
