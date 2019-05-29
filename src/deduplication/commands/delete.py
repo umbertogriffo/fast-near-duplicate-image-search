@@ -1,12 +1,11 @@
 import random
 
-from commands.helpers import get_images_list, build_tree, save_results
-from dataset.ImageToHashDataset import ImageToHashDataset
+from commands.helpers import build_tree, save_results
 
 
-def delete(images_path,
+def delete(df_dataset,
+           img_file_list,
            output_path,
-           hash_algo,
            hash_size,
            tree_type,
            distance_metric,
@@ -18,12 +17,6 @@ def delete(images_path,
            delete_keep,
            image_w,
            image_h):
-    # Retrieve the images contained in output_path.
-    img_file_list = get_images_list(images_path, natural_order=True)
-    # Build the dataset
-    df_dataset = ImageToHashDataset(img_file_list, hash_size=hash_size, hash_algo=hash_algo).build_dataset(
-        parallel=parallel,
-        batch_size=batch_size)
     # Build the tree
     near_duplicate_image_finder = build_tree(df_dataset, tree_type, distance_metric, leaf_size, parallel,
                                              batch_size)
@@ -41,3 +34,5 @@ def delete(images_path,
         near_duplicate_image_finder.show_an_image_duplicates(dict_image_to_duplicates, random_img, output_path,
                                                              image_w=image_w,
                                                              image_h=image_h)
+
+    return to_keep, to_remove

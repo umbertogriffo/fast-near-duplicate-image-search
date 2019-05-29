@@ -4,21 +4,28 @@ import os
 import imagehash
 import pandas as pd
 from PIL import Image
+from natsort import natsorted
 from tqdm import tqdm
 
 hash_algo_dict = {'average_hash': imagehash.average_hash, 'dhash': imagehash.dhash, 'phash': imagehash.phash,
                   'whash': imagehash.whash}
 
+# List mime types fully supported by Pillow
+image_extensions = ['.bmp', '.jp2', 'pcx', '.jpe', '.jpg', '.jpeg', '.tif', '.gif', '.tiff', '.rgb', '.png', 'x-ms-bmp',
+                    'x-portable-pixmap', 'x-xbitmap']
 
-class ImageToHashDataset(object):
 
-    def __init__(self, img_file_list, hash_size=8, hash_algo='phash', verbose=0):
+class ImageToHash(object):
 
-        self.img_file_list = img_file_list
+    def __init__(self, images_path, hash_size=8, hash_algo='phash', natural_order=True, verbose=0):
+
         self.hash_size = hash_size
         self.hash_algo = hash_algo
         self.verbose = verbose
         self.df_dataset = None
+
+        # Retrieve the images contained in images_path.
+        self.img_file_list = ImageToHash.get_images_list(images_path, natural_order=natural_order)
 
     @staticmethod
     def img_hash(image_path, hash_size=8, hash_algo='phash'):
@@ -34,6 +41,26 @@ class ImageToHashDataset(object):
         :return: an ImageHash.
         """
         return hash_algo_dict[hash_algo](Image.open(image_path), hash_size=hash_size)
+
+    @staticmethod
+    def get_images_list(path, natural_order=True):
+        """
+        Retrieve the images contained in a path.
+        :param natural_order: Enable Natural sort.
+        :param path: path of directory containing images.
+        :return:
+        """
+        file_list = os.walk(path)
+
+        images_file_list = [os.path.join(root, file) for root, dirs, files in file_list for file in files if
+                            any([file.lower().endswith(extension) for extension in image_extensions])]
+
+        assert len(images_file_list) > 0, "The path doesn't contain images."
+
+        if natural_order:
+            images_file_list = natsorted(images_file_list)
+
+        return images_file_list
 
     def build_dataset(self, parallel=False, batch_size=32):
         """
@@ -62,7 +89,7 @@ class ImageToHashDataset(object):
 
         # df_dataset's columns: 'file', 'hash', 'hash_list', '0', '1', '2', ..., 'N'
         self.df_dataset = df_hashes.join(newcols)
-        return self.df_dataset
+        return self.df_dataset, self.img_file_list
 
     def build_hash_to_image_dataframe(self):
         """

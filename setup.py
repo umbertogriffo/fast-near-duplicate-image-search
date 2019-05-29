@@ -39,7 +39,9 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     # include all packages under src
-    packages=find_packages('src', exclude=["experiments", "*.tests", "*.tests.*", "tests.*", "tests"]),
+    packages=find_packages('src',
+                           exclude=["*.experiments", "*.experiments.*", "experiments.*", "experiments", "*.tests",
+                                    "*.tests.*", "tests.*", "tests"]),
     # tell distutils packages are under src
     package_dir={'': 'src'},
     include_package_data=True,

@@ -2,17 +2,11 @@ import os
 
 from sklearn.manifold import TSNE
 
-from commands.helpers import get_images_list
-from dataset.ImageToHashDataset import ImageToHashDataset
 from utils.PlotUtils import PlotUtils
 
 
-def show(images_path,
-         output_path,
-         hash_algo,
-         hash_size,
-         parallel,
-         batch_size):
+def show(df_dataset,
+         output_path):
     """
     Generating a t-SNE (t-distributed Stochastic Neighbor Embedding) of a set of images, using a feature vector for
     each image derived from the pHash function.
@@ -25,12 +19,7 @@ def show(images_path,
     :param batch_size:
     :return:
     """
-    # Retrieve the images contained in images_path.
-    img_file_list = get_images_list(images_path, natural_order=True)
-    # Build the dataset
-    df_dataset = ImageToHashDataset(img_file_list, hash_size=hash_size, hash_algo=hash_algo).build_dataset(
-        parallel=parallel,
-        batch_size=batch_size)
+
     hash_str_len = len(df_dataset.at[0, 'hash_list'])
 
     # The default of 1,000 iterations gives fine results, but I'm training for longer just to eke

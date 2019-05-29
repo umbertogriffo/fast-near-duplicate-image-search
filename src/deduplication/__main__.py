@@ -5,6 +5,7 @@ import os
 from commands.delete import delete
 from commands.search import search
 from commands.show import show
+from dataset.ImageToHash import ImageToHash
 from utils.CommandLineUtils import CommandLineUtils
 from utils.FileSystemUtils import FileSystemUtils
 
@@ -131,9 +132,15 @@ def main():
         image_w = args.image_w
         image_h = args.image_h
 
-        delete(images_path,
+        df_dataset, img_file_list = ImageToHash(images_path,
+                                                hash_size=hash_size,
+                                                hash_algo=hash_algo).build_dataset(
+            parallel=parallel,
+            batch_size=batch_size)
+
+        delete(df_dataset,
+               img_file_list,
                output_path,
-               hash_algo,
                hash_size,
                tree_type,
                distance_metric,
@@ -154,12 +161,14 @@ def main():
         parallel = args.parallel
         batch_size = args.batch_size
 
-        show(images_path,
-             output_path,
-             hash_algo,
-             hash_size,
-             parallel,
-             batch_size)
+        df_dataset, _ = ImageToHash(images_path,
+                                    hash_size=hash_size,
+                                    hash_algo=hash_algo).build_dataset(
+            parallel=parallel,
+            batch_size=batch_size)
+
+        show(df_dataset,
+             output_path)
 
     if args.command == "search":
         # Config
@@ -177,10 +186,14 @@ def main():
         image_h = args.image_h
         query = args.query
 
-        search(images_path,
+        df_dataset, _ = ImageToHash(images_path,
+                                    hash_size=hash_size,
+                                    hash_algo=hash_algo).build_dataset(
+            parallel=parallel,
+            batch_size=batch_size)
+
+        search(df_dataset,
                output_path,
-               hash_algo,
-               hash_size,
                tree_type,
                distance_metric,
                nearest_neighbors,

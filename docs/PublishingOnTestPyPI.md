@@ -39,3 +39,5 @@ Uploading example_pkg_your_username-0.0.1.tar.gz
 100%|█████████████████████| 4.25k/4.25k [00:01<00:00, 3.05kB/s]
 ```
 Once uploaded your package should be viewable on `TestPyPI` https://test.pypi.org/project/deduplication/
+
+More info on: https://packaging.python.org/tutorials/packaging-projects/

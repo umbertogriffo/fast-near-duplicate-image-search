@@ -1,36 +1,11 @@
 import os
 
 import pandas as pd
-from natsort import natsorted
 from tqdm import tqdm
 
 from duplicatefinder.KDTreeFinder import KDTreeFinder
 from duplicatefinder.cKDTreeFinder import cKDTreeFinder
-from utils import FileSystemUtils
-
-# List mime types fully supported by Pillow
-image_extensions = ['.bmp', '.jp2', 'pcx', '.jpe', '.jpg', '.jpeg', '.tif', '.gif', '.tiff', '.rgb', '.png', 'x-ms-bmp',
-                    'x-portable-pixmap', 'x-xbitmap']
-
-
-def get_images_list(path, natural_order=True):
-    """
-    Retrieve the images contained in a path.
-    :param natural_order: Enable Natural sort.
-    :param path: path of directory containing images.
-    :return:
-    """
-    file_list = os.walk(path)
-
-    images_file_list = [os.path.join(root, file) for root, dirs, files in file_list for file in files if
-                        any([file.lower().endswith(extension) for extension in image_extensions])]
-
-    assert len(images_file_list) > 0, "The path doesn't contain images."
-
-    if natural_order:
-        images_file_list = natsorted(images_file_list)
-
-    return images_file_list
+from utils.FileSystemUtils import FileSystemUtils
 
 
 def copy_images(df_results, output_path_in, column):
