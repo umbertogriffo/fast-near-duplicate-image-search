@@ -1,3 +1,5 @@
 include LICENSE
 include versioneer.py
 include src/deduplication/_version.py
+include datasets/caltech_101_rand_resize/*.jpg
+include datasets/potatoes/*.png

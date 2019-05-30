@@ -44,6 +44,7 @@ setup(
                                     "*.tests.*", "tests.*", "tests"]),
     # tell distutils packages are under src
     package_dir={'': 'src'},
+    # Adding Non-Code Files
     include_package_data=True,
     install_requires=[
         "certifi==2019.3.9"
