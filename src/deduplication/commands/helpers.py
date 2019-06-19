@@ -16,13 +16,15 @@ def copy_images(df_results, output_path_in, column):
     :param column:
     :return:
     """
-    for index, row in tqdm(df_results.iterrows()):
-        full_file_name = row[column]
+    with tqdm(total=len(df_results)) as pbar:
+        for index, row in df_results.iterrows():
+            full_file_name = row[column]
 
-        dest_path = os.path.join(output_path_in, column)
+            dest_path = os.path.join(output_path_in, column)
 
-        FileSystemUtils.mkdir_if_not_exist(dest_path)
-        FileSystemUtils.copy_file(full_file_name, dest_path)
+            FileSystemUtils.mkdir_if_not_exist(dest_path)
+            FileSystemUtils.copy_file(full_file_name, dest_path)
+            pbar.update(1)
 
 
 def save_results(img_file_list_in, to_keep_in, to_remove_in, hash_size_in, threshold_in, output_path_in,

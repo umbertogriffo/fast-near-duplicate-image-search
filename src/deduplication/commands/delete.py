@@ -3,20 +3,8 @@ import random
 from commands.helpers import build_tree, save_results
 
 
-def delete(df_dataset,
-           img_file_list,
-           output_path,
-           hash_size,
-           tree_type,
-           distance_metric,
-           nearest_neighbors,
-           leaf_size,
-           parallel,
-           batch_size,
-           threshold,
-           delete_keep,
-           image_w,
-           image_h):
+def delete(df_dataset, img_file_list, output_path, hash_size, tree_type, distance_metric, nearest_neighbors,
+           leaf_size, parallel, batch_size, threshold, delete_keep, image_w, image_h):
     # Build the tree
     near_duplicate_image_finder = build_tree(df_dataset, tree_type, distance_metric, leaf_size, parallel,
                                              batch_size)

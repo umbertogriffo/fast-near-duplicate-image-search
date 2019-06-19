@@ -1,5 +1,6 @@
 import multiprocessing
 import os
+import time
 
 import imagehash
 import pandas as pd
@@ -72,7 +73,7 @@ class ImageToHash(object):
         if parallel:
             print('\tParallel mode has been enabled...')
             number_of_cpu = multiprocessing.cpu_count()
-            print("CPU: {}".format(number_of_cpu))
+            print("\tCPU: {}".format(number_of_cpu))
 
             if number_of_cpu >= 2:
                 self.number_of_cpu = number_of_cpu
@@ -143,7 +144,7 @@ class ImageToHash(object):
 
         result = {}
 
-        for i, image in tqdm(enumerate(block)):
+        for image in block:
             hash_code = self.img_hash(image, self.hash_size, self.hash_algo)
             result['file'] = result.get('file', []) + [image]
             result['short_file'] = result.get('short_file', []) + [image.split(os.sep)[-1]]
@@ -167,6 +168,7 @@ class ImageToHash(object):
         # initialise the pool outside the loop
         pool = multiprocessing.Pool(processes=self.number_of_cpu)
         # For each image calculate the phash and store it in a DataFrame
+        print("\tdelegate work...")
         for i in tqdm(range(0, len(self.img_file_list), batch_size)):
             # delegate work inside the loop
             r = pool.apply_async(self.multiprocessing_img_hash, args=(self.img_file_list[i:i + batch_size],))
@@ -177,12 +179,16 @@ class ImageToHash(object):
         pool.join()
 
         # get the results
-        for i, sublist in tqdm(enumerate(result_list)):
-            row = sublist.get()
-            if i == 0:
-                df_hashes = pd.DataFrame(row)
-            else:
-                temp = pd.DataFrame(row)
-                df_hashes = df_hashes.append(temp, ignore_index=True)
+        time.sleep(0.01)
+        print("\tget the results...")
+        with tqdm(total=len(result_list)) as pbar:
+            for i, sublist in enumerate(result_list):
+                row = sublist.get()
+                if i == 0:
+                    df_hashes = pd.DataFrame(row)
+                else:
+                    temp = pd.DataFrame(row)
+                    df_hashes = df_hashes.append(temp, ignore_index=True)
+                pbar.update(1)
 
         return df_hashes

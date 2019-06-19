@@ -14,11 +14,75 @@ from utils.FileSystemUtils import FileSystemUtils
 """
 
 
-def main():
+def main(args):
+
     from _version import get_versions
     __version__ = get_versions()['version']
+
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
 
+    output_path = os.path.join(args.output_path, dt)
+    FileSystemUtils.mkdir_if_not_exist(output_path)
+
+    if args.command == "delete":
+        # Config
+        images_path = args.images_path
+        hash_algo = args.hash_algorithm
+        hash_size = args.hash_size
+        tree_type = args.tree_type
+        distance_metric = args.distance_metric
+        nearest_neighbors = args.nearest_neighbors
+        leaf_size = args.leaf_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+        threshold = args.threshold
+        delete_keep = args.delete_keep
+        image_w = args.image_w
+        image_h = args.image_h
+
+        df_dataset, img_file_list = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
+            .build_dataset(parallel=parallel, batch_size=batch_size)
+
+        delete(df_dataset, img_file_list, output_path, hash_size, tree_type, distance_metric, nearest_neighbors,
+               leaf_size, parallel, batch_size, threshold, delete_keep, image_w, image_h)
+
+    if args.command == "show":
+        # Config
+        images_path = args.images_path
+        hash_algo = args.hash_algorithm
+        hash_size = args.hash_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+
+        df_dataset, _ = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
+            .build_dataset(parallel=parallel, batch_size=batch_size)
+
+        show(df_dataset, output_path)
+
+    if args.command == "search":
+        # Config
+        images_path = args.images_path
+        hash_algo = args.hash_algorithm
+        hash_size = args.hash_size
+        tree_type = args.tree_type
+        distance_metric = args.distance_metric
+        nearest_neighbors = args.nearest_neighbors
+        leaf_size = args.leaf_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+        threshold = args.threshold
+        image_w = args.image_w
+        image_h = args.image_h
+        query = args.query
+
+        df_dataset, _ = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
+            .build_dataset(parallel=parallel, batch_size=batch_size)
+
+        search(df_dataset, output_path, tree_type, distance_metric, nearest_neighbors, leaf_size, parallel, batch_size,
+               threshold, image_w, image_h, query)
+
+
+if __name__ == '__main__':
     # Parse command line arguments
     parser = argparse.ArgumentParser(
         description='Fast Near-Duplicate Image Search and Delete')
@@ -111,100 +175,5 @@ def main():
                         type=int,
                         default=128,
                         help="The source image is resized down to or up to the specified size.")
-    args = parser.parse_args()
 
-    output_path = os.path.join(args.output_path, dt)
-    FileSystemUtils.mkdir_if_not_exist(output_path)
-
-    if args.command == "delete":
-        # Config
-        images_path = args.images_path
-        hash_algo = args.hash_algorithm
-        hash_size = args.hash_size
-        tree_type = args.tree_type
-        distance_metric = args.distance_metric
-        nearest_neighbors = args.nearest_neighbors
-        leaf_size = args.leaf_size
-        parallel = args.parallel
-        batch_size = args.batch_size
-        threshold = args.threshold
-        delete_keep = args.delete_keep
-        image_w = args.image_w
-        image_h = args.image_h
-
-        df_dataset, img_file_list = ImageToHash(images_path,
-                                                hash_size=hash_size,
-                                                hash_algo=hash_algo).build_dataset(
-            parallel=parallel,
-            batch_size=batch_size)
-
-        delete(df_dataset,
-               img_file_list,
-               output_path,
-               hash_size,
-               tree_type,
-               distance_metric,
-               nearest_neighbors,
-               leaf_size,
-               parallel,
-               batch_size,
-               threshold,
-               delete_keep,
-               image_w,
-               image_h)
-
-    if args.command == "show":
-        # Config
-        images_path = args.images_path
-        hash_algo = args.hash_algorithm
-        hash_size = args.hash_size
-        parallel = args.parallel
-        batch_size = args.batch_size
-
-        df_dataset, _ = ImageToHash(images_path,
-                                    hash_size=hash_size,
-                                    hash_algo=hash_algo).build_dataset(
-            parallel=parallel,
-            batch_size=batch_size)
-
-        show(df_dataset,
-             output_path)
-
-    if args.command == "search":
-        # Config
-        images_path = args.images_path
-        hash_algo = args.hash_algorithm
-        hash_size = args.hash_size
-        tree_type = args.tree_type
-        distance_metric = args.distance_metric
-        nearest_neighbors = args.nearest_neighbors
-        leaf_size = args.leaf_size
-        parallel = args.parallel
-        batch_size = args.batch_size
-        threshold = args.threshold
-        image_w = args.image_w
-        image_h = args.image_h
-        query = args.query
-
-        df_dataset, _ = ImageToHash(images_path,
-                                    hash_size=hash_size,
-                                    hash_algo=hash_algo).build_dataset(
-            parallel=parallel,
-            batch_size=batch_size)
-
-        search(df_dataset,
-               output_path,
-               tree_type,
-               distance_metric,
-               nearest_neighbors,
-               leaf_size,
-               parallel,
-               batch_size,
-               threshold,
-               image_w,
-               image_h,
-               query)
-
-
-if __name__ == '__main__':
-    main()
+    main(parser.parse_args())

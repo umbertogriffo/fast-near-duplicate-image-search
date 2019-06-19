@@ -23,6 +23,7 @@ class cKDTreeFinder(NearDuplicateImageFinder):
         # 'indices' is a matrix NxM where N is the number of images and M is the value of nearest_neighbors_in.
         # For each image it contains an array containing the indices of k-nearest neighbors.
         if self.parallel:
+            print("\tCPU: {}".format(self.number_of_cpu))
             n_jobs = self.number_of_cpu
         # TODO self.distance_metric for cKDTree is p
         """

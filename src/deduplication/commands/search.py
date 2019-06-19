@@ -7,19 +7,11 @@ from commands.helpers import build_tree
 from utils.ImgUtils import ImgUtils
 
 
-def search(df_dataset,
-           output_path,
-           tree_type,
-           distance_metric,
-           nearest_neighbors,
-           leaf_size,
-           parallel,
-           batch_size,
-           threshold,
-           image_w,
-           image_h,
-           query=None):
+def search(df_dataset, output_path, tree_type, distance_metric, nearest_neighbors, leaf_size, parallel, batch_size,
+           threshold, image_w, image_h, query=None, show=True):
+
     assert query is not None, "Query can't be None"
+
     # Build the tree
     near_duplicate_image_finder = build_tree(df_dataset, tree_type, distance_metric, leaf_size, parallel,
                                              batch_size)
@@ -48,7 +40,11 @@ def search(df_dataset,
             fig_acc = plt.figure(figsize=(10, len(files_to_show) * 5))
             plt.imshow(ImgUtils.mosaic_images(np.asarray(files_to_show), len(files_to_show)))
             fig_acc.savefig(os.path.join(output_path, image_path.split(os.path.sep)[-1]))
-            plt.show()
+            if show:
+                plt.show()
             plt.cla()
             plt.close()
             return distances, indices
+        else:
+            print("The image doesn't have near duplicates.")
+            return [], []

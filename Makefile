@@ -13,7 +13,6 @@ clean:
 	rm -rf dist/
 	rm -rf outputs/
 	rm -rf src/deduplication.egg-info
-	rm -rf conda/
 
 check:
 	which conda

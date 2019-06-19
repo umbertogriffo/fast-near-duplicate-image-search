@@ -28,7 +28,6 @@ class NearDuplicateImageFinder(object):
 
         if self.parallel:
             number_of_cpu = multiprocessing.cpu_count()
-            print("CPU: {}".format(number_of_cpu))
 
             if number_of_cpu >= 2:
                 self.number_of_cpu = number_of_cpu
@@ -56,7 +55,7 @@ class NearDuplicateImageFinder(object):
 
     def find_near_duplicates(self, image_id, nearest_neighbors=5, threshold=10):
         """
-        Find near duplicates of an image.
+        Find duplicates and near duplicates of an image.
         :param image_id:
         :param nearest_neighbors:
         :param threshold:
@@ -68,8 +67,9 @@ class NearDuplicateImageFinder(object):
         distances, indices = self._find(image_id, nearest_neighbors, threshold)
         max_distance = distances.max()
         print("\t Max distance: {}".format(max_distance))
-        # Find the indices of distances elements that are non-zero and less or equal to threshold_in.
-        above_threshold_idx = np.argwhere((distances <= threshold) & (distances > 0))
+        # Find the indices of distances elements that are greater than or equal to zero and less or equal to
+        # threshold_in.
+        above_threshold_idx = np.argwhere((distances <= threshold) & (distances >= 0))
         positions = [i[1] for i in above_threshold_idx]
 
         above_threshold_distances = []
@@ -81,8 +81,8 @@ class NearDuplicateImageFinder(object):
 
         end_time = time.time()
 
-        print("{0} duplicates has been founded in {1} seconds".format(len(above_threshold_indices),
-                                                                      end_time - start_time))
+        print("{0} duplicates or near duplicates has been founded in {1} seconds".format(len(above_threshold_indices),
+                                                                                         end_time - start_time))
         return above_threshold_distances, above_threshold_indices
 
     def find_all_near_duplicates(self, nearest_neighbors=5, threshold=10):
@@ -108,8 +108,9 @@ class NearDuplicateImageFinder(object):
         print("\t Max distance: {}".format(max_distance))
         min_distance = distances.min()
         print("\t Min distance: {}".format(min_distance))
-        # Find the indices of distances elements that are non-zero and less or equal to threshold_in.
-        above_threshold_idx = np.argwhere((distances <= threshold) & (distances > 0))
+        # Find the indices of distances elements that are greater than or equal to zero and less or equal to
+        # threshold_in.
+        above_threshold_idx = np.argwhere((distances <= threshold) & (distances >= 0))
 
         pairs_of_indexes_of_duplicate_images = set([tuple(sorted([indices[idx[0], 0], indices[idx[0], idx[1]]]))
                                                     for idx in above_threshold_idx])
@@ -138,14 +139,16 @@ class NearDuplicateImageFinder(object):
         # D         A,B         C,D,E,F
         # C         A,B         C,D,E,F
         # M         A,B,M       C,D,E,F,N,O
-        for k, (key, value) in tqdm(enumerate(dict_image_to_duplicates.items())):
-            if k == 0:
-                keep.append(key)
-                remove.extend(value)
-            else:
-                if key not in remove:
+        with tqdm(total=len(dict_image_to_duplicates.items())) as pbar:
+            for k, (key, value) in enumerate(dict_image_to_duplicates.items()):
+                if k == 0:
                     keep.append(key)
-                    remove.extend(list(set(value).difference(set(remove))))
+                    remove.extend(value)
+                else:
+                    if key not in remove:
+                        keep.append(key)
+                        remove.extend(list(set(value).difference(set(remove))))
+                pbar.update(1)
 
         files_to_remove = [f for f in list(self.df_dataset.iloc[remove]['file'])]
         print("\t number of files to remove: {}".format(len(files_to_remove)))
@@ -154,8 +157,8 @@ class NearDuplicateImageFinder(object):
         print("\t number of files to keep: {}".format(len(files_to_keep)))
 
         end_time = time.time()
-        print("{0} duplicates has been founded in {1} seconds".format(len(files_to_remove),
-                                                                      end_time - start_time))
+        print("{0} duplicates or near duplicates has been founded in {1} seconds".format(len(files_to_remove),
+                                                                                         end_time - start_time))
 
         return files_to_keep, files_to_remove, dict_image_to_duplicates
 
