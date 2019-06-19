@@ -50,9 +50,32 @@ KDTree is a useful for several applications, such as searches involving a multid
 where **n** is the number of points.
 
 Installation
-============================
+============
 Check [INSTALL.md](docs/INSTALL.md) for installation instructions.
 
+How to use the Makefile
+=======================
+#### Prerequisites
+
+Install `Anaconda3-5.0.1` see `Option 2` in [INSTALL.md](docs/INSTALL.md)
+
+* All-in-one: ```make all```
+  * Setup, test and package
+* Setup: ```make setup```
+  * Installs all dependencies
+* Test: ```make test```
+  * Runs all tests
+  * Using [pytest](https://pypi.org/project/pytest/)
+* Clean: ```make clean```
+  * Removes all cached files
+* Check: ```make check```
+  * Use It to check that `which active`, `which conda`, `which pip` and `which python` points to the
+right path
+* Package: ```make package```
+  * Creates a bundle of software to be installed
+
+**Note:** Run `Setup` as your init command (or after `Clean`)
+  
 Usage
 =====
 #### Delete near-duplicate images from the target directory

@@ -66,3 +66,4 @@ pip install -U pytest
 pip install versioneer
 
 ```
+See [INSTALL.md](https://github.com/warner/python-versioneer/blob/master/INSTALL.md) in order to use versioneer.
