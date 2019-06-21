@@ -10,8 +10,8 @@ class cKDTreeFinder(NearDuplicateImageFinder):
     ]
 
     def __init__(self, img_file_list, distance_metric, leaf_size=40, parallel=False, batch_size=32, verbose=0):
-        super().__init__(img_file_list, leaf_size, parallel, batch_size, verbose)
         self.distance_metric = distance_metric
+        super().__init__(img_file_list, leaf_size, parallel, batch_size, verbose)
 
     def build_tree(self):
         print('Building the cKDTree...')
