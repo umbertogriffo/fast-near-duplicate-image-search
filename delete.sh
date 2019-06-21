@@ -6,7 +6,10 @@ python3 src/deduplication/__main__.py delete \
 --tree-type KDTree \
 --threshold 40 \
 --parallel f \
---nearest-neighbors 10 \
+--nearest-neighbors 5 \
 --hash-algorithm phash \
 --hash-size 8 \
---distance-metric manhattan
+--distance-metric manhattan \
+--backup-keep y \
+--backup-duplicate y \
+--safe-deletion y
