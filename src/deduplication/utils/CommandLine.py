@@ -1,7 +1,7 @@
 import argparse
 
 
-class CommandLineUtils(object):
+class CommandLine(object):
 
     @staticmethod
     def str2bool(v):

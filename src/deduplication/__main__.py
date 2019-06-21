@@ -6,8 +6,8 @@ from commands.delete import delete
 from commands.search import search
 from commands.show import show
 from dataset.ImageToHash import ImageToHash
-from utils.CommandLineUtils import CommandLineUtils
-from utils.FileSystemUtils import FileSystemUtils
+from utils.CommandLine import CommandLine
+from utils.FileSystem import FileSystem
 
 """
 (C) Umberto Griffo, 2019
@@ -22,7 +22,7 @@ def main(args):
     dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
 
     output_path = os.path.join(args.output_path, dt)
-    FileSystemUtils.mkdir_if_not_exist(output_path)
+    FileSystem.mkdir_if_not_exist(output_path)
 
     if args.command == "delete":
         # Config
@@ -36,7 +36,9 @@ def main(args):
         parallel = args.parallel
         batch_size = args.batch_size
         threshold = args.threshold
-        delete_keep = args.delete_keep
+        backup_keep = args.backup_keep
+        backup_duplicate = args.backup_duplicate
+        safe_deletion = args.safe_deletion
         image_w = args.image_w
         image_h = args.image_h
 
@@ -44,7 +46,8 @@ def main(args):
             .build_dataset(parallel=parallel, batch_size=batch_size)
 
         delete(df_dataset, img_file_list, output_path, hash_size, tree_type, distance_metric, nearest_neighbors,
-               leaf_size, parallel, batch_size, threshold, delete_keep, image_w, image_h)
+               leaf_size, parallel, batch_size, threshold, backup_keep, backup_duplicate, safe_deletion, image_w,
+               image_h)
 
     if args.command == "show":
         # Config
@@ -152,7 +155,7 @@ if __name__ == '__main__':
     parser.add_argument('--parallel',
                         required=False,
                         metavar="parallel",
-                        type=CommandLineUtils.str2bool,
+                        type=CommandLine.str2bool,
                         nargs='?',
                         const=True,
                         default='false',
@@ -161,12 +164,24 @@ if __name__ == '__main__':
                         type=int,
                         default=32,
                         help="The batch size is used when parallel is set to true.")
-    parser.add_argument("--delete-keep",
-                        type=CommandLineUtils.str2bool,
+    parser.add_argument("--backup-keep",
+                        type=CommandLine.str2bool,
+                        nargs='?',
+                        const=True,
+                        default='true',
+                        help="Whether to save the image to keep into a folder.")
+    parser.add_argument("--backup-duplicate",
+                        type=CommandLine.str2bool,
+                        nargs='?',
+                        const=True,
+                        default='true',
+                        help="Whether to save the duplicates into a folder.")
+    parser.add_argument("--safe-deletion",
+                        type=CommandLine.str2bool,
                         nargs='?',
                         const=True,
                         default='false',
-                        help="Whether to delete the image having duplicates.")
+                        help="Whether to execute the deletion without really deleting nothing.")
     parser.add_argument("--image-w",
                         type=int,
                         default=128,

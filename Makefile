@@ -27,6 +27,7 @@ setup:
 test:
 	echo $(CONDACTIVATE)
 	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && pytest -s -vv;
+	rm -rf outputs/
 
 package:
 	python setup.py sdist bdist_wheel;

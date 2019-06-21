@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 
 
-class FileSystemUtils(object):
+class FileSystem(object):
 
     @staticmethod
     def mkdir_if_not_exist(directory):
@@ -41,7 +41,9 @@ class FileSystemUtils(object):
 
     @staticmethod
     def find_a_specific_parent_dir(file_path, parent_dir_name):
+        if str(file_path) == os.path.sep:
+            raise ValueError("{} doesn't exist".format(parent_dir_name))
         if str(Path(file_path).parent).split(os.path.sep)[-1] == parent_dir_name:
             return Path(file_path).parent
         else:
-            return FileSystemUtils.find_a_specific_parent_dir(Path(file_path).parent, parent_dir_name)
+            return FileSystem.find_a_specific_parent_dir(Path(file_path).parent, parent_dir_name)

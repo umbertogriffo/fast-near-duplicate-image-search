@@ -54,12 +54,16 @@ class NearDuplicateImageFinder(object):
         raise NotImplementedError('subclasses must override find_all()!')
 
     def find_near_duplicates(self, image_id, nearest_neighbors=5, threshold=10):
-        """
-        Find duplicates and near duplicates of an image.
-        :param image_id:
-        :param nearest_neighbors:
-        :param threshold:
-        :return:
+        """Find duplicates and near duplicates of an image.
+        Parameters
+        ----------
+        image_id
+        nearest_neighbors
+        threshold
+
+        Returns
+        -------
+
         """
         print('Finding duplicates...')
         start_time = time.time()
@@ -86,14 +90,19 @@ class NearDuplicateImageFinder(object):
         return above_threshold_distances, above_threshold_indices
 
     def find_all_near_duplicates(self, nearest_neighbors=5, threshold=10):
-        """
-        Find near duplicated images.
-        :param nearest_neighbors:
-        :param threshold:
-        :return: files_to_keep, files_to_remove, dict_image_to_duplicates
+        """Find all duplicate and/or near duplicated images.
+
+        Parameters
+        ----------
+        nearest_neighbors
+        threshold
+
+        Returns
+        -------
+
         """
 
-        print('Finding duplicates...')
+        print('Finding duplicates and/or near duplicates...')
         start_time = time.time()
 
         dict_image_to_duplicates = dict()
@@ -113,40 +122,48 @@ class NearDuplicateImageFinder(object):
         above_threshold_idx = np.argwhere((distances <= threshold) & (distances >= 0))
 
         pairs_of_indexes_of_duplicate_images = set([tuple(sorted([indices[idx[0], 0], indices[idx[0], idx[1]]]))
-                                                    for idx in above_threshold_idx])
+                                                    for idx in above_threshold_idx if
+                                                    indices[idx[0], 0] != indices[idx[0], idx[1]]])
 
-        # (129, 162), (176, 358), (185, 266), (129, 236), (19, 381), (60, 253), (153, 415), (20, 223), (188, 329),
-        # (31, 269), (66, 214), (168, 274), (119, 250), (231, 255), (230, 250), (141, 277), (311, 388), (129, 311)
-        # 129 -> 162, 236, 311
+        # Example:
+        # <class 'set'>: {(0, 1), (1, 2), (1, 3), (4, 6), (4, 5), (5, 6), (2, 3), (0, 3), (7, 8), (0, 2)}
 
-        pair_sorted_by_first = sorted(list(pairs_of_indexes_of_duplicate_images), key=lambda tup: tup[0])
-        # [..., (129, 162), (129, 236), (129, 311), (129, 171), ...]
+        pair_sorted_by_first = sorted(list(pairs_of_indexes_of_duplicate_images), key=lambda tup: (tup[0], tup[1]))
+        # Example:
+        # <class 'list'>: [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3), (4, 5), (4, 6), (5, 6), (7, 8)]
 
         [dict_image_to_duplicates[t[0]].append(t[1]) if t[0] in list(dict_image_to_duplicates.keys())
          else dict_image_to_duplicates.update({t[0]: [t[1]]}) for t in pair_sorted_by_first]
-        # {... , 129: [162, 236, 311, 171], ... }
+        # Example:
+        # <class 'dict'>: {
+        # 0: [1, 2, 3],
+        # 1: [2, 3],
+        # 2: [3],
+        # 4: [5, 6], -> 4 doesn't have neighbors in common with the previous ones.
+        # 5: [6],
+        # 7: [8]} -> 7 doesn't have neighbors in common with the previous ones.
+        # results:
+        # keep = [0, 4, 7]
+        # remove = [1, 2, 3, 5, 6, 8]
 
-        # dict_image_to_duplicates:
-        # A -> C,D
-        # B -> E,F,C
-        # D -> A
-        # C -> A,B,D
-        # M -> N,O
-        # Results:
-        # key       keep        remove
-        # A         A           C,D
-        # B         A,B         C,D,E,F
-        # D         A,B         C,D,E,F
-        # C         A,B         C,D,E,F
-        # M         A,B,M       C,D,E,F,N,O
         with tqdm(total=len(dict_image_to_duplicates.items())) as pbar:
             for k, (key, value) in enumerate(dict_image_to_duplicates.items()):
                 if k == 0:
-                    keep.append(key)
+                    if key not in keep:
+                        keep.append(key)
                     remove.extend(value)
                 else:
                     if key not in remove:
-                        keep.append(key)
+                        # I keep the key if and only if it doesn't have neighbors in common
+                        # to the previously removed keys (so is a different image).
+                        # Otherwise remove the key.
+                        if not any(elem in remove for elem in value):
+                            keep.append(key)
+                        else:
+                            if key not in remove:
+                                remove.append(key)
+                    # Either key is or isn't in remove, I remove the key's neighbors that hasn't removed yet.
+                    if not all(elem in remove for elem in value):
                         remove.extend(list(set(value).difference(set(remove))))
                 pbar.update(1)
 
@@ -162,15 +179,20 @@ class NearDuplicateImageFinder(object):
 
         return files_to_keep, files_to_remove, dict_image_to_duplicates
 
-    def show_an_image_duplicates(self, image_to_duplicates, image, output_path, image_w, image_h):
-        """
-        Show near duplicates.
-        :param image_to_duplicates:
-        :param image:
-        :param output_path:
-        :param image_w:
-        :param image_h:
-        :return:
+    def show_an_image_duplicates(self, image_to_duplicates, image, output_path, image_w=128, image_h=128):
+        """ Show near duplicates.
+
+        Parameters
+        ----------
+        image_to_duplicates
+        image
+        output_path
+        image_w
+        image_h
+
+        Returns
+        -------
+
         """
 
         print('Showing duplicates...')
