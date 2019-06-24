@@ -79,25 +79,85 @@ right path
   
 Usage
 =====
+#### Arguments
+```
+  <command>             delete or show or search.
+
+  --images-path /path/to/images/
+                        The Directory containing images.
+  --output-path /path/to/output/
+                        The Directory containing results.
+  -q /path/to/image/, --query /path/to/image/
+                        Path to the query image
+  --tree-type {KDTree,cKDTree}
+  --leaf-size LEAF_SIZE
+                        Leaf size of the tree.
+  --hash-algorithm {average_hash,dhash,phash,whash}
+                        Hash algorithm to use.
+  --hash-size HASH_SIZE
+                        Hash size to use.
+  -d {euclidean,l2,minkowski,p,manhattan,cityblock,l1,chebyshev,infinity}, --distance-metric {euclidean,l2,minkowski,p,manhattan,cityblock,l1,chebyshev,infinity}
+                        Distance metric to use
+  --nearest-neighbors NEAREST_NEIGHBORS
+                        # of nearest neighbors.
+  --threshold THRESHOLD
+                        Threshold.
+  --parallel [parallel]
+                        Whether to parallelize the computation.
+  --batch-size BATCH_SIZE
+                        The batch size is used when parallel is set to true.
+  --backup-keep [BACKUP_KEEP]
+                        Whether to save the image to keep into a folder.
+  --backup-duplicate [BACKUP_DUPLICATE]
+                        Whether to save the duplicates into a folder.
+  --safe-deletion [SAFE_DELETION]
+                        Whether to execute the deletion without really
+                        deleting nothing.
+  --image-w IMAGE_W     The source image is resized down to or up to the
+                        specified size.
+  --image-h IMAGE_H     The source image is resized down to or up to the
+                        specified size.
+```
+
 #### Delete near-duplicate images from the target directory
 
 ```
 $ deduplication delete --images_path <target_dir> --output_path <output_dir> --tree_type KDTree
 ```
+For example:
+```
+delete \
+--images-path datasets/potatoes_multi_folder  \
+--output-path outputs \
+--tree-type KDTree \
+--threshold 40 \
+--parallel y \
+--nearest-neighbors 5 \
+--hash-algorithm phash \
+--hash-size 8 \
+--distance-metric manhattan \
+--backup-keep y \
+--backup-duplicate y \
+--safe-deletion y \
+```
 ```
 Building the dataset...
- 94%|█████████▎| 399/426 [00:01<00:00, 260.90it/s]0 out to 426
-100%|██████████| 426/426 [00:01<00:00, 261.02it/s]
+	Parallel mode has been enabled...
+	CPU: 16
+	delegate work...
+100%|██████████| 1/1 [00:00<00:00, 2231.01it/s]
+	get the results...
+100%|██████████| 1/1 [00:00<00:00, 773.57it/s]
 Building the KDTree...
-Finding duplicates...
-	 Max distance: 279.0
+Finding duplicates and/or near duplicates...
+	 Max distance: 33.0
 	 Min distance: 0.0
-305it [00:00, 208654.82it/s]
-	 number of files to remove: 237
-	 number of files to keep: 128
-365 duplicates has been founded in 0.021222591400146484 seconds
-We have found 365/426 duplicates in folder
-We have found 189/426 not duplicates in folder
+	 number of files to remove: 28
+	 number of files to keep: 4
+28 duplicates or near duplicates has been founded in 0.0027272701263427734 seconds
+We have found 28/32 duplicates in folder
+Backuping images...
+100%|██████████| 28/28 [00:00<00:00, 4087.45it/s]
 ```
 #### Find near-duplicated images from an image you specified
 ```
@@ -126,6 +186,15 @@ $ deduplication search \
 #### Show near-duplicate images from the target directory With t-SNE 
 ```
 $ deduplication show --images_path <target_dir> --output_path <output_dir>
+```
+For example:
+```
+$ show
+--images-path datasets/potatoes \
+--output-path outputs \
+--parallel y \
+--image-w 32 \
+--image-h 32
 ```
 ![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/resized_cluster.png)
 
