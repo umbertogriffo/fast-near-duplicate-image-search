@@ -9,15 +9,14 @@ adding the hash into a **KDTree** and perform a **nearest neighbours** search.
 In addition, near-duplicate images can be visualized generating a 
 [t-SNE (t-distributed Stochastic Neighbor Embedding)](https://lvdmaaten.github.io/tsne/) 
 using a feature vector for each image derived from the **pHash** function.
-## Search
-![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/phase.png)
-## Deletion
-![delete](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/delete.png)
-
 > I take no responsibility for bugs in this script or accidentally deleted pictures. 
 > Use at your own risk. Make sure you back up your pictures before using.
 > This algorithm is intended to find nearly duplicate images. It is NOT intended to find images that are conceptually 
 similar.
+## Search
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/phase.png)
+## Deletion
+![delete](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/delete.png)
 
 ## pHash definition
 
