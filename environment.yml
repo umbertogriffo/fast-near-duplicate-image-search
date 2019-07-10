@@ -2,6 +2,7 @@ name: fast_near_duplicate_img_src_py3
 channels:
   - defaults
 dependencies:
+  - _libgcc_mutex=0.1=main
   - blas=1.0=mkl
   - bzip2=1.0.6=h14c3975_5
   - ca-certificates=2019.1.23=0
@@ -81,14 +82,26 @@ dependencies:
   - pip:
       - atomicwrites==1.3.0
       - attrs==19.1.0
+      - bleach==3.1.0
+      - chardet==3.0.4
+      - docutils==0.14
+      - idna==2.8
     - imagehash==4.0
       - importlib-metadata==0.15
       - more-itertools==7.0.0
     - opencv-contrib-python==4.0.0.21
+      - pkginfo==1.5.0.1
       - pluggy==0.12.0
       - py==1.8.0
+      - pygments==2.4.2
       - pytest==4.5.0
     - pywavelets==1.0.3
+      - readme-renderer==24.0
+      - requests==2.22.0
+      - requests-toolbelt==0.9.1
+      - twine==1.13.0
+      - urllib3==1.25.3
     - versioneer==0.18
       - wcwidth==0.1.7
+      - webencodings==0.5.1
       - zipp==0.5.1

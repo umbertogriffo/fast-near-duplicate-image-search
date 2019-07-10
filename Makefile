@@ -24,6 +24,10 @@ setup:
 	echo $(CONDACTIVATE)
 	source $(CONDACTIVATE) && conda env create -f environment.yml && conda deactivate
 
+export_env:
+	echo $(CONDACTIVATE)
+	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && conda env export -n fast_near_duplicate_img_src_py3 > environment.yml
+
 test:
 	echo $(CONDACTIVATE)
 	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && pytest -s -vv;

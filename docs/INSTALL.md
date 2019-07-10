@@ -7,22 +7,21 @@ In the root directory of the CLI source code, running `install.sh` will install 
 Likewise, running `uninstall.sh` will remove the app.
 
 ### Option 2: Anaconda 
-#### Install Anaconda: 
+#### Install Anaconda 3-2019.03-Linux-x86_64 
+
+https://repo.anaconda.com/archive/
 ```
 cd /tmp
-curl -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
-sha256sum Anaconda3-5.0.1-Linux-x86_64.sh
+curl -O https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
+sha256sum Anaconda3-2019.03-Linux-x86_64.sh
 ```
- 55e4db1919f49c92d5abbf27a4be5986ae157f074bf9f8238963cd4582a4068a
+ 45c851b7497cc14d5ca060064394569f724b67d9b5f98a926ed49b834a6bb73a
 ```
-bash Anaconda3-5.0.1-Linux-x86_64.sh
+bash Anaconda3-2019.03-Linux-x86_64.sh
 ```
-To active the installation
+#### To verify the installation
 ```
-source ~/.bashrc
-```
-To verify the installation
-```
+conda info
 conda list
 ```
 #### Create the environment using `fast_near_duplicate_img_src_py3.yml`:
@@ -41,10 +40,10 @@ conda create -n fast_near_duplicate_img_src_py3 python=3.6
 ```
 
  To activate this environment, use:
- > source activate fast_near_duplicate_img_src_py3
+ > conda activate fast_near_duplicate_img_src_py3
 
  To deactivate an active environment, use:
- > source deactivate
+ > conda deactivate
 
 ##### Install dependencies
 ```
