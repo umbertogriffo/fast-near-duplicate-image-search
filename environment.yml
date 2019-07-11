@@ -105,3 +105,5 @@ dependencies:
       - wcwidth==0.1.7
       - webencodings==0.5.1
       - zipp==0.5.1
+prefix: /home/umberto/anaconda3/envs/fast_near_duplicate_img_src_py3
+

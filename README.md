@@ -66,6 +66,7 @@ Install `Anaconda3-5.0.1` see `Option 2` in [INSTALL.md](docs/INSTALL.md)
   * Installs all dependencies
 * Export dependencies of the environment: ```make export_env```
   * Export a yaml specification file containing the detailed dependencies of the environment.
+  * Export a requirements.txt file containing the detailed dependencies of the environment.
 * Test: ```make test```
   * Runs all tests
   * Using [pytest](https://pypi.org/project/pytest/)

@@ -27,6 +27,7 @@ setup:
 export_env:
 	echo $(CONDACTIVATE)
 	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && conda env export -n fast_near_duplicate_img_src_py3 > environment.yml
+	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && pip freeze > requirements.txt
 
 test:
 	echo $(CONDACTIVATE)
