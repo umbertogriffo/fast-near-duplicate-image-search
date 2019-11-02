@@ -65,7 +65,7 @@ setup(
         , "opencv-contrib-python==4.0.0.21"
         , "pandas==0.24.2"
         , "patsy==0.5.1"
-        , "Pillow==6.0.0"
+        , "Pillow==6.2.0"
         , "pkginfo==1.5.0.1"
         , "pluggy==0.12.0"
         , "py==1.8.0"
