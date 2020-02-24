@@ -49,7 +49,7 @@ setup(
     install_requires=[
         "atomicwrites==1.3.0"
         , "attrs==19.1.0"
-        , "bleach==3.1.0"
+        , "bleach==3.1.1"
         , "certifi==2019.3.9"
         , "cycler==0.10.0"
         , "ImageHash==4.0"
