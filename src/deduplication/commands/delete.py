@@ -1,6 +1,6 @@
 import random
 
-from commands.helpers import build_tree, save_results
+from deduplication.commands.helpers import build_tree, save_results
 
 
 def delete(df_dataset, img_file_list, output_path, hash_size, tree_type, distance_metric, nearest_neighbors,

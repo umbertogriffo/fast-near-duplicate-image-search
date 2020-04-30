@@ -3,8 +3,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from commands.helpers import build_tree
-from utils.ImgUtils import ImgUtils
+from deduplication.commands.helpers import build_tree
+from deduplication.utils.ImgUtils import ImgUtils
 
 
 def search(df_dataset, output_path, tree_type, distance_metric, nearest_neighbors, leaf_size, parallel, batch_size,

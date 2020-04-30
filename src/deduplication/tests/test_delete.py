@@ -9,9 +9,20 @@ from tests.conftest import mkdir_output, PROJECT_DIR
 @pytest.mark.parametrize(
     'hash_size, distance_metric, nearest_neighbors, leaf_size, parallel, batch_size, threshold, '
     'backup_keep, backup_duplicate, safe_deletion, expected',
-    [(8, 'manhattan', 5, 40, False, 32, 40, True, True, True,
-      [12, '2018-12-11-15-031193.png', '2018-12-11-15-031197.png', 414])
-     ])
+    [(8,
+      'manhattan',
+      5,
+      40,
+      False,
+      32,
+      40,
+      True,
+      True,
+      True,
+      [12, '2018-12-11-15-031193.png', '2018-12-11-15-031197.png', 414]
+      )
+     ]
+)
 def test_delete(build_potato_dataset, tree_type, hash_size, distance_metric, nearest_neighbors, leaf_size,
                 parallel, batch_size, threshold, backup_keep, backup_duplicate, safe_deletion, expected):
     output_path = mkdir_output(os.path.join(str(PROJECT_DIR), "outputs"))

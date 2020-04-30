@@ -1,12 +1,9 @@
+.PHONY: check clean setup-env export-env test lint package
 
-.PHONY: clean setup test
-
-SHELL=/bin/bash
-CONDACTIVATE:= $(shell which activate)
-
-all: setup test package
+all: check clean setup-env test package
 
 clean:
+	rm -rf .pyenv/
 	rm -rf .cache/
 	rm -rf .pytest_cache/
 	rm -rf build/
@@ -15,24 +12,26 @@ clean:
 	rm -rf src/deduplication.egg-info
 
 check:
-	which conda
-	which activate
-	which pip
-	which python
+	which pip3
+	which python3
 
-setup:
-	echo $(CONDACTIVATE)
-	source $(CONDACTIVATE) && conda env create -f environment.yml && conda deactivate
+setup-env:
+	virtualenv .pyenv; \
+    . .pyenv/bin/activate; \
+    pip3 install -r requirements.txt; \
 
-export_env:
-	echo $(CONDACTIVATE)
-	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && conda env export -n fast_near_duplicate_img_src_py3 > environment.yml
-	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && pip freeze > requirements.txt
+export-env:
+	. .pyenv/bin/activate; \
+    pip3 freeze > requirements.txt
 
 test:
-	echo $(CONDACTIVATE)
-	source $(CONDACTIVATE) fast_near_duplicate_img_src_py3 && pytest -s -vv;
+	. .pyenv/bin/activate; \
+	pytest -s -vv;
 	rm -rf outputs/
+
+lint:
+	. .pyenv/bin/activate; \
+    python3 -m pylint src/deduplication; \
 
 package:
 	python setup.py sdist bdist_wheel;

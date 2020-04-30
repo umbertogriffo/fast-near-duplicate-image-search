@@ -3,9 +3,9 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-from duplicatefinder.KDTreeFinder import KDTreeFinder
-from duplicatefinder.cKDTreeFinder import cKDTreeFinder
-from utils.FileSystem import FileSystem
+from deduplication.duplicatefinder.KDTreeFinder import KDTreeFinder
+from deduplication.duplicatefinder.cKDTreeFinder import cKDTreeFinder
+from deduplication.utils.FileSystem import FileSystem
 
 
 def backup_images(df_results, output_path_in, column):

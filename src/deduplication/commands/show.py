@@ -2,7 +2,7 @@ import os
 
 from sklearn.manifold import TSNE
 
-from utils.PlotUtils import PlotUtils
+from deduplication.utils.PlotUtils import PlotUtils
 
 
 def show(df_dataset,

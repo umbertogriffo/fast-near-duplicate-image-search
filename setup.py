@@ -47,46 +47,43 @@ setup(
     # Adding Non-Code Files
     include_package_data=True,
     install_requires=[
-        "atomicwrites==1.3.0"
-        , "attrs==19.1.0"
-        , "bleach==3.1.4"
-        , "certifi==2019.3.9"
-        , "cycler==0.10.0"
-        , "ImageHash==4.0"
-        , "importlib-metadata==0.15"
-        , "kiwisolver==1.0.1"
-        , "matplotlib==3.0.3"
-        , "mkl-fft==1.0.10"
-        , "mkl-random==1.0.2"
-        , "more-itertools==7.0.0"
-        , "natsort==5.5.0"
-        , "numpy==1.16.2"
-        , "olefile==0.46"
-        , "opencv-contrib-python==4.0.0.21"
-        , "pandas==0.24.2"
-        , "patsy==0.5.1"
-        , "Pillow==6.2.0"
-        , "pkginfo==1.5.0.1"
-        , "pluggy==0.12.0"
-        , "py==1.8.0"
-        , "pyparsing==2.4.0"
-        , "pytest==4.5.0"
-        , "python-dateutil==2.8.0"
-        , "pytz==2019.1"
-        , "PyWavelets==1.0.3"
-        , "readme-renderer==24.0"
-        , "requests-toolbelt==0.9.1"
-        , "scikit-learn==0.20.3"
-        , "scipy==1.2.1"
-        , "seaborn==0.9.0"
-        , "six==1.12.0"
-        , "statsmodels==0.9.0"
-        , "tornado==6.0.2"
-        , "tqdm==4.31.1"
-        , "twine==1.13.0"
-        , "versioneer==0.18"
-        , "wcwidth==0.1.7"
-        , "zipp==0.5.1"],
+        "astroid==2.4.0",
+        "attrs==19.3.0",
+        "cycler==0.10.0",
+        "ImageHash==4.0",
+        "importlib-metadata==0.15",
+        "isort==4.3.21",
+        "joblib==0.14.1",
+        "kiwisolver==1.0.1",
+        "lazy-object-proxy==1.4.3",
+        "matplotlib==3.0.3",
+        "mccabe==0.6.1",
+        "more-itertools==7.0.0",
+        "natsort==5.5.0",
+        "numpy==1.16.2",
+        "packaging==20.3",
+        "pandas==1.0.3",
+        "Pillow==6.2.2",
+        "pluggy==0.12.0",
+        "py==1.8.0",
+        "pylint==2.5.0",
+        "pyparsing==2.4.0",
+        "pytest==4.5.0",
+        "python-dateutil==2.8.0",
+        "pytz==2019.1",
+        "PyWavelets==1.0.3",
+        "scikit-learn==0.22.2.post1",
+        "scipy==1.2.1",
+        "seaborn==0.9.0",
+        "six==1.12.0",
+        "toml==0.10.0",
+        "tqdm==4.45.0",
+        "typed-ast==1.4.1",
+        "versioneer==0.18",
+        "wcwidth==0.1.7",
+        "wrapt==1.12.1",
+        "zipp==0.5.1"
+    ],
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [

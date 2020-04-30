@@ -58,25 +58,26 @@ How to use the Makefile
 =======================
 #### Prerequisites
 
-Install `Anaconda3-5.0.1` see `Option 2` in [INSTALL.md](docs/INSTALL.md)
+Install `Python3` and `virtualenv` see `Option 2` in [INSTALL.md](docs/INSTALL.md)
 
 * All-in-one: ```make all```
-  * Setup, test and package
-* Setup: ```make setup```
-  * Installs all dependencies
+  * Setup, test and package.
+* Setup: ```make setup-env```
+  * Installs all dependencies.
 * Export dependencies of the environment: ```make export_env```
-  * Export a yaml specification file containing the detailed dependencies of the environment.
   * Export a requirements.txt file containing the detailed dependencies of the environment.
 * Test: ```make test```
-  * Runs all tests
+  * Runs all tests.
   * Using [pytest](https://pypi.org/project/pytest/)
 * Clean: ```make clean```
-  * Removes all cached files
+  * Removes the environment.
+  * Removes all cached files.
 * Check: ```make check```
-  * Use It to check that `which active`, `which conda`, `which pip` and `which python` points to the
-right path
+  * Use It to check that `which pip3` and `which python3` points to the right path.
+* Lint: ```make lint```
+  * Checks PEP8 conformance and code smells using [pylint](https://www.pylint.org/).
 * Package: ```make package```
-  * Creates a bundle of software to be installed
+  * Creates a bundle of software to be installed.
 
 **Note:** Run `Setup` as your init command (or after `Clean`)
   

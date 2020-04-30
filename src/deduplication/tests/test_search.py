@@ -2,8 +2,8 @@ import os
 
 import pytest
 
-from commands.search import search
-from tests.conftest import delete_output, mkdir_output, PROJECT_DIR, POTATOES_BASE_PATH, checkEqual
+from deduplication.commands.search import search
+from deduplication.tests.conftest import delete_output, mkdir_output, PROJECT_DIR, POTATOES_BASE_PATH, checkEqual
 
 
 @pytest.mark.parametrize(

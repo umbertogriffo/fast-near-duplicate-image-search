@@ -8,9 +8,9 @@ print(sys.path)
 for path in sys.path:
     if 'src' in path:
         print(os.path.join(path, 'deduplication'))
-        sys.path.insert(0, os.path.join(path,'deduplication'))
-        break;
+        sys.path.insert(0, os.path.join(path, 'deduplication'))
+        break
 
-from ._version import get_versions
+from deduplication._version import get_versions
 __version__ = get_versions()['version']
 del get_versions

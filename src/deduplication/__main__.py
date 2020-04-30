@@ -2,90 +2,20 @@ import argparse
 import datetime
 import os
 
-from commands.delete import delete
-from commands.search import search
-from commands.show import show
-from dataset.ImageToHash import ImageToHash
-from utils.CommandLine import CommandLine
-from utils.FileSystem import FileSystem
+from deduplication.commands.delete import delete
+from deduplication.commands.search import search
+from deduplication.commands.show import show
+from deduplication.dataset.ImageToHash import ImageToHash
+from deduplication.utils.CommandLine import CommandLine
+from deduplication.utils.FileSystem import FileSystem
 
 """
 (C) Umberto Griffo, 2019
 """
 
 
-def main(args):
+def main(args=None):
 
-    from _version import get_versions
-    __version__ = get_versions()['version']
-
-    dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
-
-    output_path = os.path.join(args.output_path, dt)
-    FileSystem.mkdir_if_not_exist(output_path)
-
-    if args.command == "delete":
-        # Config
-        images_path = args.images_path
-        hash_algo = args.hash_algorithm
-        hash_size = args.hash_size
-        tree_type = args.tree_type
-        distance_metric = args.distance_metric
-        nearest_neighbors = args.nearest_neighbors
-        leaf_size = args.leaf_size
-        parallel = args.parallel
-        batch_size = args.batch_size
-        threshold = args.threshold
-        backup_keep = args.backup_keep
-        backup_duplicate = args.backup_duplicate
-        safe_deletion = args.safe_deletion
-        image_w = args.image_w
-        image_h = args.image_h
-
-        df_dataset, img_file_list = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
-            .build_dataset(parallel=parallel, batch_size=batch_size)
-
-        delete(df_dataset, img_file_list, output_path, hash_size, tree_type, distance_metric, nearest_neighbors,
-               leaf_size, parallel, batch_size, threshold, backup_keep, backup_duplicate, safe_deletion, image_w,
-               image_h)
-
-    if args.command == "show":
-        # Config
-        images_path = args.images_path
-        hash_algo = args.hash_algorithm
-        hash_size = args.hash_size
-        parallel = args.parallel
-        batch_size = args.batch_size
-
-        df_dataset, _ = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
-            .build_dataset(parallel=parallel, batch_size=batch_size)
-
-        show(df_dataset, output_path)
-
-    if args.command == "search":
-        # Config
-        images_path = args.images_path
-        hash_algo = args.hash_algorithm
-        hash_size = args.hash_size
-        tree_type = args.tree_type
-        distance_metric = args.distance_metric
-        nearest_neighbors = args.nearest_neighbors
-        leaf_size = args.leaf_size
-        parallel = args.parallel
-        batch_size = args.batch_size
-        threshold = args.threshold
-        image_w = args.image_w
-        image_h = args.image_h
-        query = args.query
-
-        df_dataset, _ = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
-            .build_dataset(parallel=parallel, batch_size=batch_size)
-
-        search(df_dataset, output_path, tree_type, distance_metric, nearest_neighbors, leaf_size, parallel, batch_size,
-               threshold, image_w, image_h, query)
-
-
-if __name__ == '__main__':
     # Parse command line arguments
     parser = argparse.ArgumentParser(
         description='Fast Near-Duplicate Image Search and Delete')
@@ -191,4 +121,77 @@ if __name__ == '__main__':
                         default=128,
                         help="The source image is resized down to or up to the specified size.")
 
-    main(parser.parse_args())
+    if args is None:
+        args = parser.parse_args()
+
+    from deduplication._version import get_versions
+    __version__ = get_versions()['version']
+
+    dt = str(datetime.datetime.today().strftime('%Y-%m-%d-%H-%M'))
+
+    output_path = os.path.join(args.output_path, dt)
+    FileSystem.mkdir_if_not_exist(output_path)
+
+    if args.command == "delete":
+        # Config
+        images_path = args.images_path
+        hash_algo = args.hash_algorithm
+        hash_size = args.hash_size
+        tree_type = args.tree_type
+        distance_metric = args.distance_metric
+        nearest_neighbors = args.nearest_neighbors
+        leaf_size = args.leaf_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+        threshold = args.threshold
+        backup_keep = args.backup_keep
+        backup_duplicate = args.backup_duplicate
+        safe_deletion = args.safe_deletion
+        image_w = args.image_w
+        image_h = args.image_h
+
+        df_dataset, img_file_list = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
+            .build_dataset(parallel=parallel, batch_size=batch_size)
+
+        delete(df_dataset, img_file_list, output_path, hash_size, tree_type, distance_metric, nearest_neighbors,
+               leaf_size, parallel, batch_size, threshold, backup_keep, backup_duplicate, safe_deletion, image_w,
+               image_h)
+
+    if args.command == "show":
+        # Config
+        images_path = args.images_path
+        hash_algo = args.hash_algorithm
+        hash_size = args.hash_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+
+        df_dataset, _ = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
+            .build_dataset(parallel=parallel, batch_size=batch_size)
+
+        show(df_dataset, output_path)
+
+    if args.command == "search":
+        # Config
+        images_path = args.images_path
+        hash_algo = args.hash_algorithm
+        hash_size = args.hash_size
+        tree_type = args.tree_type
+        distance_metric = args.distance_metric
+        nearest_neighbors = args.nearest_neighbors
+        leaf_size = args.leaf_size
+        parallel = args.parallel
+        batch_size = args.batch_size
+        threshold = args.threshold
+        image_w = args.image_w
+        image_h = args.image_h
+        query = args.query
+
+        df_dataset, _ = ImageToHash(images_path, hash_size=hash_size, hash_algo=hash_algo) \
+            .build_dataset(parallel=parallel, batch_size=batch_size)
+
+        search(df_dataset, output_path, tree_type, distance_metric, nearest_neighbors, leaf_size, parallel, batch_size,
+               threshold, image_w, image_h, query)
+
+
+if __name__ == '__main__':
+    main()

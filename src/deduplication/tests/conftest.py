@@ -3,8 +3,8 @@ import os
 
 import pytest
 
-from dataset.ImageToHash import ImageToHash
-from utils.FileSystem import FileSystem
+from deduplication.dataset.ImageToHash import ImageToHash
+from deduplication.utils.FileSystem import FileSystem
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = FileSystem.find_a_specific_parent_dir(ROOT_DIR, "fast-near-duplicate-image-search")
