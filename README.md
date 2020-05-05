@@ -13,10 +13,21 @@ using a feature vector for each image derived from the **pHash** function.
 > Use at your own risk. Make sure you back up your pictures before using.
 > This algorithm is intended to find nearly duplicate images. It is NOT intended to find images that are conceptually 
 similar.
-## Search
-![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/phase.png)
-## Deletion
-![delete](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/delete.png)
+
+## Contents
+
+- [pHash definition](#phash-definition)
+- [KDTree definition](#kdtree-definition)
+- [Search](#search)
+- [Deletion](#deletion)
+- [Installation](installation)
+- [How to use the Makefile](#how-to-use-the-makefile)
+- [Usage](#usage)
+    - [Delete near-duplicate images from the target directory](delete-near-duplicate-images-from-the-target-directory)
+    - [Find near-duplicated images from an image you specified](find-near-duplicated-images-from-an-image-you-specified)
+    - [Show near-duplicate images from the target directory With t-SNE](show-near-duplicate-images-from-the-target-directory-with-t-sne)
+- [Todo](#todo)
+- [References](#references)
 
 ## pHash definition
 
@@ -49,6 +60,12 @@ KDTree is a useful for several applications, such as searches involving a multid
 |O(n)|O(log n)|O(log n)|O(log n)|
 
 where **n** is the number of points.
+
+## Search
+![phases](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/phase.png)
+
+## Deletion
+![delete](https://github.com/umbertogriffo/fast-near-duplicate-image-search/blob/master/docs/images/delete.png)
 
 Installation
 ============
