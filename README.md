@@ -23,9 +23,9 @@ similar.
 - [Installation](#installation)
 - [How to use the Makefile](#how-to-use-the-makefile)
 - [Usage](#usage)
-    - [Delete near-duplicate images from the target directory](#delete-nearduplicate-images-from-the-target-directory)
-    - [Find near-duplicated images from an image you specified](#find-nearduplicated-images-from-an-image-you-specified)
-    - [Show near-duplicate images from the target directory With t-SNE](#show-nearduplicate-images-from-the-target-directory-with-tsne)
+    - [Delete near-duplicate images from the target directory](#delete-near-duplicate-images-from-the-target-directory)
+    - [Find near-duplicated images from an image you specified](#find-near-duplicated-images-from-an-image-you-specified)
+    - [Show near-duplicate images from the target directory With t-SNE](#show-nearduplicate-images-from-the-target-directory-with-t-sne)
 - [Todo](#todo)
 - [References](#references)
 
