@@ -65,7 +65,7 @@ setup(
         "pandas==1.0.3",
         "Pillow==6.2.2",
         "pluggy==0.12.0",
-        "py==1.8.0",
+        "py==1.10.0",
         "pylint==2.5.0",
         "pyparsing==2.4.0",
         "pytest==4.5.0",
