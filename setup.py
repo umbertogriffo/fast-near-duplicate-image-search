@@ -63,7 +63,7 @@ setup(
         "numpy==1.16.2",
         "packaging==20.3",
         "pandas==1.0.3",
-        "Pillow==6.2.2",
+        "Pillow==9.0.1",
         "pluggy==0.12.0",
         "py==1.8.0",
         "pylint==2.5.0",
