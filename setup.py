@@ -60,7 +60,7 @@ setup(
         "mccabe==0.6.1",
         "more-itertools==7.0.0",
         "natsort==5.5.0",
-        "numpy==1.16.2",
+        "numpy==1.22.0",
         "packaging==20.3",
         "pandas==1.0.3",
         "Pillow==6.2.2",
