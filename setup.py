@@ -53,7 +53,7 @@ setup(
         "ImageHash==4.0",
         "importlib-metadata==0.15",
         "isort==4.3.21",
-        "joblib==0.14.1",
+        "joblib==1.2.0",
         "kiwisolver==1.0.1",
         "lazy-object-proxy==1.4.3",
         "matplotlib==3.0.3",
